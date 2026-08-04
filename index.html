@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Herbert P. — QA Engineer</title>
+<meta name="description" content="SQA Team Lead certifying casino and slot software across jurisdictions. Test design, SAS protocol, Playwright automation.">
+<link rel="alternate" hreflang="en" href="https://herbertph.com/">
+<link rel="alternate" hreflang="pt" href="https://herbertph.com/?lang=pt">
+<link rel="alternate" hreflang="es" href="https://herbertph.com/?lang=es">
+<link rel="alternate" hreflang="fr" href="https://herbertph.com/?lang=fr">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#E7E8E2; --panel:#F3F3EE; --ink:#14171A; --soft:#5B635F;
+    --rule:#C7C9C0; --pass:#1E5641; --mark:#A2401F;
+    --mono:"IBM Plex Mono",ui-monospace,monospace;
+    --sans:"IBM Plex Sans",system-ui,sans-serif;
+    --cond:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .wrap{max-width:980px;margin:0 auto;padding:0 24px}
+  .label{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
+  h2.sec{font-family:var(--cond);font-weight:700;font-size:clamp(28px,5vw,44px);letter-spacing:-.02em;line-height:1.05;margin:10px 0 0}
+
+  /* header */
+  .top{border-bottom:1px solid var(--rule);position:sticky;top:0;background:var(--paper);z-index:20}
+  .top .wrap{display:flex;justify-content:space-between;align-items:center;gap:14px;height:52px}
+  .sig{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.06em;white-space:nowrap}
+  .right{display:flex;align-items:center;gap:18px}
+  .stat{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--pass);display:flex;align-items:center;gap:7px}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--pass);flex:none}
+  .langs{display:flex;gap:2px}
+  .langs button{
+    font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.08em;
+    background:none;border:1px solid transparent;color:var(--soft);
+    padding:4px 6px;cursor:pointer;line-height:1;
+  }
+  .langs button:hover{color:var(--ink)}
+  .langs button[aria-current="true"]{color:var(--ink);border-color:var(--rule);background:var(--panel)}
+
+  /* hero */
+  .hero{padding:56px 0 64px}
+  .hero h1{font-family:var(--cond);font-weight:700;font-size:clamp(34px,6.4vw,64px);line-height:1.02;letter-spacing:-.025em;margin:18px 0 20px;max-width:17ch}
+  .hero p.lede{font-size:clamp(16px,2.2vw,19px);max-width:54ch;margin:0;color:#2A2F32}
+  .hero p.lede strong{font-weight:500}
+
+  /* run panel */
+  .run{background:var(--panel);border:1px solid var(--rule);margin-top:38px}
+  .run-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--rule)}
+  .run-head .file{font-family:var(--mono);font-size:11.5px;letter-spacing:.04em}
+  .run-head .who{font-family:var(--mono);font-size:11px;color:var(--soft);letter-spacing:.1em;text-transform:uppercase}
+  .run-body{padding:8px 0}
+  .row{display:flex;align-items:baseline;gap:12px;padding:7px 16px;font-family:var(--mono);font-size:13.5px;opacity:0;transform:translateY(4px)}
+  .row.on{opacity:1;transform:none;transition:opacity .28s ease,transform .28s ease}
+  .row .tick{width:14px;flex:none;color:var(--pass);font-weight:600}
+  .row.pending .tick{color:var(--mark)}
+  .row .name{flex:1;min-width:0}
+  .row .ms{color:var(--soft);font-size:12px;flex:none}
+  .row.pending .ms{color:var(--mark)}
+  .run-foot{border-top:1px solid var(--rule);padding:11px 16px;font-family:var(--mono);font-size:12px;color:var(--soft);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .run-foot b{color:var(--pass);font-weight:600}
+
+  section{padding:64px 0;border-top:1px solid var(--rule)}
+  .sec-head{margin-bottom:36px}
+
+  .prac{border-top:1px solid var(--rule)}
+  .prac .item{display:grid;grid-template-columns:170px 1fr;gap:20px;padding:22px 0;border-bottom:1px solid var(--rule)}
+  .prac h3{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;margin:3px 0 0}
+  .prac p{margin:0;max-width:60ch}
+
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule)}
+  .card{background:var(--panel);padding:22px 20px;display:flex;flex-direction:column;gap:12px}
+  .card .top-line{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+  .card h3{font-family:var(--cond);font-weight:700;font-size:23px;letter-spacing:-.01em;margin:0}
+  .card .verdict{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--pass);white-space:nowrap}
+  .card p{margin:0;font-size:15px;color:#2A2F32}
+  .card dl{margin:auto 0 0;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-family:var(--mono);font-size:11.5px;padding-top:12px;border-top:1px solid var(--rule)}
+  .card dt{color:var(--soft);letter-spacing:.08em;text-transform:uppercase;font-size:10.5px;padding-top:1px}
+  .card dd{margin:0}
+  .card a.link{font-family:var(--mono);font-size:11.5px;color:var(--mark);text-decoration:none;border-bottom:1px solid currentColor;align-self:flex-start}
+  .card a.link:hover{color:var(--ink)}
+
+  .cols{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+  .cols h3{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);margin:0 0 12px;padding-bottom:8px;border-bottom:1px solid var(--rule)}
+  .cols ul{list-style:none;margin:0;padding:0;font-family:var(--mono);font-size:13.5px}
+  .cols li{padding:3px 0}
+  .cols li span{color:var(--soft);font-size:11px}
+
+  .signoff{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:start}
+  .signoff p{margin:0 0 22px;max-width:46ch}
+  .contact{list-style:none;margin:0;padding:0;font-family:var(--mono);font-size:14px}
+  .contact li{border-bottom:1px solid var(--rule);padding:11px 0;display:flex;justify-content:space-between;gap:12px}
+  .contact li:first-child{border-top:1px solid var(--rule)}
+  .contact a{text-decoration:none;border-bottom:1px solid var(--rule)}
+  .contact a:hover{border-color:var(--ink)}
+  .contact .k{color:var(--soft);font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding-top:3px}
+  .stamp{border:1.5px solid var(--pass);color:var(--pass);padding:18px;font-family:var(--mono);font-size:11.5px;line-height:1.7;letter-spacing:.04em}
+  .stamp .big{font-family:var(--cond);font-size:30px;font-weight:700;letter-spacing:.02em;display:block;margin-bottom:6px}
+
+  footer{border-top:1px solid var(--rule);padding:22px 0 40px}
+  footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:11.5px;color:var(--soft)}
+  footer a{color:var(--soft)}
+
+  a:focus-visible,button:focus-visible{outline:2px solid var(--mark);outline-offset:3px}
+
+  @media (max-width:860px){ .stat{display:none} }
+  @media (max-width:760px){
+    .grid,.cols,.signoff{grid-template-columns:1fr}
+    .prac .item{grid-template-columns:1fr;gap:8px}
+    section{padding:48px 0}
+    .hero{padding:40px 0 48px}
+    .sig{font-size:11px}
+  }
+  @media (prefers-reduced-motion:reduce){ .row{opacity:1;transform:none} html{scroll-behavior:auto} }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <span class="sig">HERBERT P. — QA</span>
+    <div class="right">
+      <span class="stat"><span class="dot"></span><span data-i="status"></span></span>
+      <nav class="langs" id="langs" aria-label="Language">
+        <button type="button" data-lang="en" lang="en">EN</button>
+        <button type="button" data-lang="pt" lang="pt">PT</button>
+        <button type="button" data-lang="es" lang="es">ES</button>
+        <button type="button" data-lang="fr" lang="fr">FR</button>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <span class="label" data-i="eyebrow"></span>
+    <h1 data-i="h1"></h1>
+    <p class="lede" data-ihtml="lede"></p>
+
+    <div class="run" id="run">
+      <div class="run-head">
+        <span class="file">herbert.spec.ts</span>
+        <span class="who" data-i="runWho"></span>
+      </div>
+      <div class="run-body" id="rows">
+        <div class="row" data-ms="14"><span class="tick">✓</span><span class="name" data-i="r1"></span><span class="ms"></span></div>
+        <div class="row" data-ms="38"><span class="tick">✓</span><span class="name" data-i="r2"></span><span class="ms"></span></div>
+        <div class="row" data-ms="22"><span class="tick">✓</span><span class="name" data-i="r3"></span><span class="ms"></span></div>
+        <div class="row" data-ms="51"><span class="tick">✓</span><span class="name" data-i="r4"></span><span class="ms"></span></div>
+        <div class="row" data-ms="19"><span class="tick">✓</span><span class="name" data-i="r5"></span><span class="ms"></span></div>
+        <div class="row" data-ms="9"><span class="tick">✓</span><span class="name" data-i="r6"></span><span class="ms"></span></div>
+        <div class="row pending" data-pending="1"><span class="tick">◷</span><span class="name" data-i="r7"></span><span class="ms" data-i="pending"></span></div>
+      </div>
+      <div class="run-foot">
+        <span id="summary"></span>
+        <span data-i="flaky"></span>
+      </div>
+    </div>
+  </div>
+
+  <section id="practice">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="label" data-i="pLabel"></span>
+        <h2 class="sec" data-i="pTitle"></h2>
+      </div>
+      <div class="prac">
+        <div class="item"><h3 data-i="p1h"></h3><p data-i="p1b"></p></div>
+        <div class="item"><h3 data-i="p2h"></h3><p data-i="p2b"></p></div>
+        <div class="item"><h3 data-i="p3h"></h3><p data-i="p3b"></p></div>
+        <div class="item"><h3 data-i="p4h"></h3><p data-i="p4b"></p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="evidence">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="label" data-i="eLabel"></span>
+        <h2 class="sec" data-i="eTitle"></h2>
+      </div>
+      <div class="grid">
+
+        <article class="card">
+          <div class="top-line"><h3>FLUXO</h3><span class="verdict" data-i="v1"></span></div>
+          <p data-i="c1b"></p>
+          <a class="link" href="https://github.com/Herbertph" target="_blank" rel="noopener" data-i="seeProject"></a>
+          <dl>
+            <dt data-i="dStack"></dt><dd>React · Node · Railway</dd>
+            <dt data-i="dRole"></dt><dd data-i="c1role"></dd>
+          </dl>
+        </article>
+
+        <article class="card">
+          <div class="top-line"><h3>playwright-FluxoBjj</h3><span class="verdict" data-i="v2"></span></div>
+          <p data-i="c2b"></p>
+          <a class="link" href="https://github.com/Herbertph/playwright-FluxoBjj" target="_blank" rel="noopener" data-i="readTests"></a>
+          <dl>
+            <dt data-i="dStack"></dt><dd>Playwright · TypeScript</dd>
+            <dt data-i="dCovers"></dt><dd data-i="c2covers"></dd>
+          </dl>
+        </article>
+
+        <article class="card">
+          <div class="top-line"><h3>QA Operations</h3><span class="verdict" data-i="v3"></span></div>
+          <p data-i="c3b"></p>
+          <dl>
+            <dt data-i="dStack"></dt><dd data-i="c3stack"></dd>
+            <dt data-i="dUsers"></dt><dd data-i="c3users"></dd>
+          </dl>
+        </article>
+
+        <article class="card">
+          <div class="top-line"><h3>Courtside GM</h3><span class="verdict" data-i="v4"></span></div>
+          <p data-i="c4b"></p>
+          <dl>
+            <dt data-i="dStack"></dt><dd data-i="c4stack"></dd>
+            <dt data-i="dRole"></dt><dd data-i="c4role"></dd>
+          </dl>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="toolbox">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="label" data-i="tLabel"></span>
+        <h2 class="sec" data-i="tTitle"></h2>
+      </div>
+      <div class="cols">
+        <div>
+          <h3 data-i="tTesting"></h3>
+          <ul>
+            <li>Playwright</li>
+            <li data-i="tk1"></li>
+            <li data-i="tk2"></li>
+            <li data-i="tk3"></li>
+            <li data-i="tk4"></li>
+          </ul>
+        </div>
+        <div>
+          <h3 data-i="tEng"></h3>
+          <ul>
+            <li>JavaScript · TypeScript</li>
+            <li>React · Node</li>
+            <li>SQL</li>
+            <li>Git · GitHub Actions</li>
+            <li data-i="tk5"></li>
+          </ul>
+        </div>
+        <div>
+          <h3 data-i="tLang"></h3>
+          <ul>
+            <li data-i="lg1"></li>
+            <li data-i="lg2"></li>
+            <li data-i="lg3"></li>
+            <li data-i="lg4"></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap signoff">
+      <div>
+        <span class="label" data-i="sLabel"></span>
+        <h2 class="sec" style="margin-bottom:20px" data-i="sTitle"></h2>
+        <p data-i="sBody"></p>
+        <ul class="contact">
+          <li><span class="k" data-i="kEmail"></span><a href="mailto:hello@herbertph.com">hello@herbertph.com</a></li>
+          <li><span class="k">LinkedIn</span><a href="https://www.linkedin.com/in/herbertph/" target="_blank" rel="noopener">/in/herbertph</a></li>
+          <li><span class="k">GitHub</span><a href="https://github.com/Herbertph" target="_blank" rel="noopener">@Herbertph</a></li>
+          <li><span class="k" data-i="kResume"></span><a href="/resume.pdf" data-i="kResumeLink"></a></li>
+        </ul>
+      </div>
+      <div class="stamp">
+        <span class="big" data-i="stampBig"></span>
+        <span data-i="stampName"></span><br>
+        <span data-i="stampRole"></span><br>
+        <span data-i="stampBase"></span><br>
+        <span data-i="stampStatus"></span><br>
+        <span data-i="stampVerified"></span> <span id="today"></span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span data-i="footNote"></span>
+    <span><a href="https://github.com/Herbertph" target="_blank" rel="noopener" data-i="footLink"></a></span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var T = {
+    en:{
+      title:"Herbert P. — QA Engineer",
+      desc:"SQA Team Lead certifying casino and slot software across jurisdictions. Test design, SAS protocol, Playwright automation.",
+      locale:"en-CA",
+      status:"Open to relocation",
+      eyebrow:"Moncton, Canada · Gaming & regulated software",
+      h1:"I test the software regulators have to sign off on.",
+      lede:"SQA Team Lead at a gaming certification lab, where a missed defect means a rejected submission in a whole jurisdiction. <strong>Now putting that same rigor into automated suites with Playwright.</strong>",
+      runWho:"Test run",
+      r1:"leads a software QA team at BMM Test Labs",
+      r2:"certifies slot and casino games across multiple jurisdictions",
+      r3:"reads and validates SAS protocol traffic",
+      r4:"builds internal tooling the QA team uses daily",
+      r5:"writes Playwright suites against real applications",
+      r6:"works in English, Portuguese, Spanish and French",
+      r7:"ISTQB Foundation Level certification",
+      pending:"scheduled", flaky:"0 flaky", summary:"{p} passed · {s} scheduled",
+      pLabel:"How I work", pTitle:"Compliance taught me to write tests that hold up.",
+      p1h:"Test design", p1b:"Requirements come as regulatory rules, not user stories. I turn them into coverage a third party can audit — traceable cases, reproducible steps, evidence attached to every result.",
+      p2h:"Automation", p2b:"Playwright suites built for stability first: resilient locators, explicit waits over sleeps, and a hard rule that a flaky test gets fixed or deleted — never re-run until it's green.",
+      p3h:"Release", p3b:"Pipelines that build the app, serve it in an ephemeral environment, run the suite against that build, and only then deploy. Production is never the test target.",
+      p4h:"Team", p4b:"Leading a QA team means defect triage that engineers trust: severity that maps to real impact, reports written so the fix is obvious, and process that survives the busy weeks.",
+      eLabel:"Evidence", eTitle:"Things I built, and then tested.",
+      v1:"Live", v2:"Suite passing", v3:"In use", v4:"In progress",
+      c1b:"A web app that maps Brazilian jiu-jitsu positions and the transitions between them, so a practitioner can trace a path instead of memorizing isolated moves.",
+      c2b:"The end-to-end suite for FLUXO, written as a working study of the practice: locator strategy, assertion depth, and what actually causes flakiness in a real UI.",
+      c3b:"An internal web app for my team at BMM Test Labs — built because the tracking we needed didn't exist in the tools we had.",
+      c4b:"A browser-based basketball management game with a full production stack — simulation logic, persistent state, and enough moving parts to be worth testing properly.",
+      seeProject:"View project →", readTests:"Read the tests →",
+      dStack:"Stack", dRole:"Role", dCovers:"Covers", dUsers:"Users",
+      c1role:"Design, build, deploy", c2covers:"UI flows, navigation, state",
+      c3stack:"Web app · internal", c3users:"SQA team, daily",
+      c4stack:"Web · game simulation", c4role:"Solo build",
+      tLabel:"Toolbox", tTitle:"What I reach for.",
+      tTesting:"Testing", tEng:"Engineering", tLang:"Languages",
+      tk1:"Manual & exploratory testing", tk2:"Test case design", tk3:"SAS protocol validation", tk4:"Regression & compliance suites", tk5:"JIRA · internal tooling",
+      lg1:"Portuguese <span>native</span>", lg2:"English <span>fluent</span>", lg3:"Spanish <span>basic</span>", lg4:"French <span>basic</span>",
+      sLabel:"Sign-off", sTitle:"Hiring for QA or automation?",
+      sBody:"I'm looking for QA Automation and SDET roles — open to relocation, and used to working across time zones and languages. Happy to walk through how I'd approach testing your product.",
+      kEmail:"Email", kResume:"Résumé", kResumeLink:"Download PDF",
+      stampBig:"PASS", stampName:"NAME — HERBERT P.", stampRole:"ROLE — QA / TEST AUTOMATION",
+      stampBase:"BASE — MONCTON, CANADA", stampStatus:"STATUS — OPEN TO RELOCATION", stampVerified:"VERIFIED —",
+      footNote:"This page is built, tested with Playwright, and deployed by a pipeline.", footLink:"See the workflow →"
+    },
+    pt:{
+      title:"Herbert P. — Engenheiro de QA",
+      desc:"Líder de equipe de QA certificando software de cassino e slots em múltiplas jurisdições. Design de testes, protocolo SAS, automação com Playwright.",
+      locale:"pt-BR",
+      status:"Aberto a realocação",
+      eyebrow:"Moncton, Canadá · Jogos e software regulado",
+      h1:"Eu testo o software que o regulador precisa aprovar.",
+      lede:"Líder de equipe de QA em um laboratório de certificação de jogos, onde um defeito que passa significa uma submissão rejeitada em uma jurisdição inteira. <strong>Agora aplicando esse mesmo rigor em suítes automatizadas com Playwright.</strong>",
+      runWho:"Execução de testes",
+      r1:"lidera uma equipe de QA de software na BMM Test Labs",
+      r2:"certifica jogos de slot e cassino em múltiplas jurisdições",
+      r3:"lê e valida tráfego do protocolo SAS",
+      r4:"constrói ferramentas internas que a equipe de QA usa todo dia",
+      r5:"escreve suítes Playwright contra aplicações reais",
+      r6:"trabalha em inglês, português, espanhol e francês",
+      r7:"certificação ISTQB Foundation Level",
+      pending:"agendada", flaky:"0 instáveis", summary:"{p} passaram · {s} agendado",
+      pLabel:"Como eu trabalho", pTitle:"Compliance me ensinou a escrever testes que se sustentam.",
+      p1h:"Design de testes", p1b:"Os requisitos chegam como regras regulatórias, não como user stories. Eu os transformo em cobertura auditável por terceiros — casos rastreáveis, passos reproduzíveis e evidência anexada a cada resultado.",
+      p2h:"Automação", p2b:"Suítes Playwright feitas para estabilidade primeiro: locators resilientes, esperas explícitas no lugar de sleeps, e uma regra dura — teste instável se conserta ou se apaga, nunca se re-executa até ficar verde.",
+      p3h:"Entrega", p3b:"Pipelines que constroem a aplicação, sobem uma cópia efêmera, rodam a suíte contra aquele build e só então publicam. Produção nunca é o alvo do teste.",
+      p4h:"Time", p4b:"Liderar QA é fazer triagem de defeitos em que os devs confiam: severidade que corresponde ao impacto real, relatórios escritos para que a correção seja óbvia, e processo que sobrevive às semanas corridas.",
+      eLabel:"Evidências", eTitle:"Coisas que eu construí — e depois testei.",
+      v1:"No ar", v2:"Suíte passando", v3:"Em uso", v4:"Em andamento",
+      c1b:"Um web app que mapeia posições de jiu-jitsu e as transições entre elas, para que o praticante consiga traçar um caminho em vez de decorar movimentos isolados.",
+      c2b:"A suíte end-to-end do FLUXO, escrita como um estudo prático: estratégia de locators, profundidade das asserções e o que realmente causa flakiness numa UI real.",
+      c3b:"Um web app interno para o meu time na BMM Test Labs — construído porque o acompanhamento que precisávamos não existia nas ferramentas que tínhamos.",
+      c4b:"Um jogo de gestão de basquete no navegador com stack de produção completa — lógica de simulação, estado persistente e peças em movimento suficientes para valer um teste sério.",
+      seeProject:"Ver projeto →", readTests:"Ler os testes →",
+      dStack:"Stack", dRole:"Papel", dCovers:"Cobre", dUsers:"Usuários",
+      c1role:"Design, build e deploy", c2covers:"Fluxos de UI, navegação, estado",
+      c3stack:"Web app · interno", c3users:"Equipe de SQA, diariamente",
+      c4stack:"Web · simulação de jogo", c4role:"Construção solo",
+      tLabel:"Ferramentas", tTitle:"O que eu uso.",
+      tTesting:"Testes", tEng:"Engenharia", tLang:"Idiomas",
+      tk1:"Testes manuais e exploratórios", tk2:"Design de casos de teste", tk3:"Validação do protocolo SAS", tk4:"Suítes de regressão e compliance", tk5:"JIRA · ferramentas internas",
+      lg1:"Português <span>nativo</span>", lg2:"Inglês <span>fluente</span>", lg3:"Espanhol <span>básico</span>", lg4:"Francês <span>básico</span>",
+      sLabel:"Assinatura", sTitle:"Contratando para QA ou automação?",
+      sBody:"Estou procurando posições de QA Automation e SDET — aberto a realocação e acostumado a trabalhar entre fusos e idiomas. Fico feliz em explicar como eu abordaria os testes do seu produto.",
+      kEmail:"E-mail", kResume:"Currículo", kResumeLink:"Baixar PDF",
+      stampBig:"APROVADO", stampName:"NOME — HERBERT P.", stampRole:"FUNÇÃO — QA / AUTOMAÇÃO DE TESTES",
+      stampBase:"BASE — MONCTON, CANADÁ", stampStatus:"STATUS — ABERTO A REALOCAÇÃO", stampVerified:"VERIFICADO —",
+      footNote:"Esta página é construída, testada com Playwright e publicada por um pipeline.", footLink:"Ver o workflow →"
+    },
+    es:{
+      title:"Herbert P. — Ingeniero de QA",
+      desc:"Líder de equipo de QA que certifica software de casino y slots en múltiples jurisdicciones. Diseño de pruebas, protocolo SAS, automatización con Playwright.",
+      locale:"es-ES",
+      status:"Abierto a reubicación",
+      eyebrow:"Moncton, Canadá · Juegos y software regulado",
+      h1:"Pruebo el software que el regulador tiene que aprobar.",
+      lede:"Líder de equipo de QA en un laboratorio de certificación de juegos, donde un defecto que se escapa significa una presentación rechazada en toda una jurisdicción. <strong>Ahora aplico ese mismo rigor en suites automatizadas con Playwright.</strong>",
+      runWho:"Ejecución de pruebas",
+      r1:"lidera un equipo de QA de software en BMM Test Labs",
+      r2:"certifica juegos de slot y casino en múltiples jurisdicciones",
+      r3:"lee y valida tráfico del protocolo SAS",
+      r4:"construye herramientas internas que el equipo de QA usa a diario",
+      r5:"escribe suites de Playwright contra aplicaciones reales",
+      r6:"trabaja en inglés, portugués, español y francés",
+      r7:"certificación ISTQB Foundation Level",
+      pending:"programada", flaky:"0 inestables", summary:"{p} aprobadas · {s} programada",
+      pLabel:"Cómo trabajo", pTitle:"El compliance me enseñó a escribir pruebas que aguantan.",
+      p1h:"Diseño de pruebas", p1b:"Los requisitos llegan como normas regulatorias, no como historias de usuario. Los convierto en cobertura que un tercero puede auditar: casos trazables, pasos reproducibles y evidencia adjunta a cada resultado.",
+      p2h:"Automatización", p2b:"Suites de Playwright pensadas primero para la estabilidad: locators resistentes, esperas explícitas en lugar de sleeps y una regla dura — una prueba inestable se arregla o se borra, nunca se repite hasta que salga verde.",
+      p3h:"Entrega", p3b:"Pipelines que compilan la aplicación, la sirven en un entorno efímero, ejecutan la suite contra ese build y solo entonces publican. Producción nunca es el objetivo de las pruebas.",
+      p4h:"Equipo", p4b:"Liderar QA es hacer un triaje de defectos en el que los desarrolladores confían: severidad acorde al impacto real, informes escritos para que la corrección sea obvia y procesos que sobreviven a las semanas cargadas.",
+      eLabel:"Evidencia", eTitle:"Cosas que construí y luego probé.",
+      v1:"En línea", v2:"Suite en verde", v3:"En uso", v4:"En curso",
+      c1b:"Una aplicación web que mapea posiciones de jiu-jitsu y las transiciones entre ellas, para que el practicante pueda trazar un camino en vez de memorizar movimientos sueltos.",
+      c2b:"La suite end-to-end de FLUXO, escrita como un estudio práctico: estrategia de locators, profundidad de las aserciones y qué provoca realmente el flakiness en una UI real.",
+      c3b:"Una aplicación web interna para mi equipo en BMM Test Labs, construida porque el seguimiento que necesitábamos no existía en las herramientas que teníamos.",
+      c4b:"Un juego de gestión de baloncesto en el navegador con un stack de producción completo: lógica de simulación, estado persistente y suficientes piezas en movimiento como para merecer pruebas de verdad.",
+      seeProject:"Ver proyecto →", readTests:"Leer las pruebas →",
+      dStack:"Stack", dRole:"Rol", dCovers:"Cubre", dUsers:"Usuarios",
+      c1role:"Diseño, desarrollo y despliegue", c2covers:"Flujos de UI, navegación, estado",
+      c3stack:"Aplicación web · interna", c3users:"Equipo de SQA, a diario",
+      c4stack:"Web · simulación", c4role:"Proyecto en solitario",
+      tLabel:"Herramientas", tTitle:"Lo que uso.",
+      tTesting:"Pruebas", tEng:"Ingeniería", tLang:"Idiomas",
+      tk1:"Pruebas manuales y exploratorias", tk2:"Diseño de casos de prueba", tk3:"Validación del protocolo SAS", tk4:"Suites de regresión y compliance", tk5:"JIRA · herramientas internas",
+      lg1:"Portugués <span>nativo</span>", lg2:"Inglés <span>fluido</span>", lg3:"Español <span>básico</span>", lg4:"Francés <span>básico</span>",
+      sLabel:"Firma", sTitle:"¿Contratando para QA o automatización?",
+      sBody:"Busco puestos de QA Automation y SDET, abierto a reubicación y acostumbrado a trabajar entre husos horarios e idiomas. Encantado de explicar cómo enfocaría las pruebas de tu producto.",
+      kEmail:"Correo", kResume:"Currículum", kResumeLink:"Descargar PDF",
+      stampBig:"APROBADO", stampName:"NOMBRE — HERBERT P.", stampRole:"PUESTO — QA / AUTOMATIZACIÓN DE PRUEBAS",
+      stampBase:"BASE — MONCTON, CANADÁ", stampStatus:"ESTADO — ABIERTO A REUBICACIÓN", stampVerified:"VERIFICADO —",
+      footNote:"Esta página se construye, se prueba con Playwright y se publica mediante un pipeline.", footLink:"Ver el workflow →"
+    },
+    fr:{
+      title:"Herbert P. — Ingénieur QA",
+      desc:"Chef d'équipe QA certifiant des logiciels de casino et de machines à sous dans plusieurs juridictions. Conception de tests, protocole SAS, automatisation Playwright.",
+      locale:"fr-CA",
+      status:"Ouvert à la mobilité",
+      eyebrow:"Moncton, Canada · Jeux et logiciels réglementés",
+      h1:"Je teste les logiciels que le régulateur doit approuver.",
+      lede:"Chef d'équipe QA dans un laboratoire de certification de jeux, où un défaut qui passe signifie une soumission rejetée dans toute une juridiction. <strong>J'applique aujourd'hui la même rigueur à des suites automatisées avec Playwright.</strong>",
+      runWho:"Exécution des tests",
+      r1:"dirige une équipe QA logicielle chez BMM Test Labs",
+      r2:"certifie des jeux de casino et de machines à sous dans plusieurs juridictions",
+      r3:"lit et valide le trafic du protocole SAS",
+      r4:"développe les outils internes utilisés chaque jour par l'équipe QA",
+      r5:"écrit des suites Playwright sur des applications réelles",
+      r6:"travaille en anglais, portugais, espagnol et français",
+      r7:"certification ISTQB Foundation Level",
+      pending:"planifiée", flaky:"0 instable", summary:"{p} réussis · {s} planifiée",
+      pLabel:"Ma méthode", pTitle:"La conformité m'a appris à écrire des tests qui tiennent.",
+      p1h:"Conception de tests", p1b:"Les exigences arrivent sous forme de règles réglementaires, pas de user stories. Je les transforme en couverture auditable par un tiers : cas traçables, étapes reproductibles et preuve jointe à chaque résultat.",
+      p2h:"Automatisation", p2b:"Des suites Playwright conçues d'abord pour la stabilité : des locators robustes, des attentes explicites plutôt que des sleeps, et une règle stricte — un test instable se corrige ou se supprime, on ne le relance jamais jusqu'au vert.",
+      p3h:"Livraison", p3b:"Des pipelines qui compilent l'application, la servent dans un environnement éphémère, exécutent la suite sur ce build et ne déploient qu'ensuite. La production n'est jamais la cible des tests.",
+      p4h:"Équipe", p4b:"Diriger la QA, c'est un tri des anomalies auquel les développeurs se fient : une sévérité qui reflète l'impact réel, des rapports écrits pour rendre le correctif évident, et un processus qui survit aux semaines chargées.",
+      eLabel:"Preuves", eTitle:"Ce que j'ai construit, puis testé.",
+      v1:"En ligne", v2:"Suite au vert", v3:"En service", v4:"En cours",
+      c1b:"Une application web qui cartographie les positions de jiu-jitsu et les transitions entre elles, pour qu'un pratiquant puisse tracer un chemin au lieu de mémoriser des mouvements isolés.",
+      c2b:"La suite end-to-end de FLUXO, écrite comme une étude pratique : stratégie de locators, profondeur des assertions et ce qui provoque réellement l'instabilité dans une vraie interface.",
+      c3b:"Une application web interne pour mon équipe chez BMM Test Labs, construite parce que le suivi dont nous avions besoin n'existait pas dans nos outils.",
+      c4b:"Un jeu de gestion de basket dans le navigateur avec une vraie stack de production : logique de simulation, état persistant et assez de pièces mobiles pour mériter de vrais tests.",
+      seeProject:"Voir le projet →", readTests:"Lire les tests →",
+      dStack:"Stack", dRole:"Rôle", dCovers:"Couvre", dUsers:"Utilisateurs",
+      c1role:"Conception, développement, déploiement", c2covers:"Parcours UI, navigation, état",
+      c3stack:"Application web · interne", c3users:"Équipe SQA, au quotidien",
+      c4stack:"Web · simulation", c4role:"Projet solo",
+      tLabel:"Outils", tTitle:"Ce que j'utilise.",
+      tTesting:"Tests", tEng:"Ingénierie", tLang:"Langues",
+      tk1:"Tests manuels et exploratoires", tk2:"Conception de cas de test", tk3:"Validation du protocole SAS", tk4:"Suites de régression et de conformité", tk5:"JIRA · outils internes",
+      lg1:"Portugais <span>natif</span>", lg2:"Anglais <span>courant</span>", lg3:"Espagnol <span>notions</span>", lg4:"Français <span>notions</span>",
+      sLabel:"Signature", sTitle:"Vous recrutez en QA ou en automatisation ?",
+      sBody:"Je cherche des postes de QA Automation et SDET — ouvert à la mobilité et habitué à travailler entre plusieurs fuseaux et langues. Je serai ravi d'expliquer comment j'aborderais les tests de votre produit.",
+      kEmail:"E-mail", kResume:"CV", kResumeLink:"Télécharger le PDF",
+      stampBig:"VALIDÉ", stampName:"NOM — HERBERT P.", stampRole:"POSTE — QA / AUTOMATISATION DES TESTS",
+      stampBase:"BASE — MONCTON, CANADA", stampStatus:"STATUT — OUVERT À LA MOBILITÉ", stampVerified:"VÉRIFIÉ —",
+      footNote:"Cette page est construite, testée avec Playwright et déployée par un pipeline.", footLink:"Voir le workflow →"
+    }
+  };
+
+  var SUPPORTED = ["en","pt","es","fr"];
+  var rows = Array.prototype.slice.call(document.querySelectorAll("#rows .row"));
+  var passed = rows.filter(function(r){ return !r.dataset.pending; }).length;
+  var scheduled = rows.length - passed;
+  var current = "en";
+  var ran = false;
+
+  function apply(lang){
+    var d = T[lang] || T.en;
+    current = lang;
+    document.documentElement.lang = lang;
+    document.title = d.title;
+    var meta = document.querySelector('meta[name="description"]');
+    if (meta) meta.setAttribute("content", d.desc);
+
+    document.querySelectorAll("[data-i]").forEach(function(el){
+      var v = d[el.dataset.i];
+      if (typeof v !== "string") return;
+      if (v.indexOf("<") > -1) el.innerHTML = v; else el.textContent = v;
+    });
+    document.querySelectorAll("[data-ihtml]").forEach(function(el){
+      var v = d[el.dataset.ihtml];
+      if (typeof v === "string") el.innerHTML = v;
+    });
+
+    document.getElementById("summary").innerHTML =
+      d.summary.replace("{p}", "<b>" + passed + "</b>").replace("{s}", scheduled);
+
+    document.getElementById("today").textContent = new Date()
+      .toLocaleDateString(d.locale, { year:"numeric", month:"short", day:"2-digit" })
+      .toUpperCase();
+
+    document.querySelectorAll("#langs button").forEach(function(b){
+      b.setAttribute("aria-current", String(b.dataset.lang === lang));
+    });
+
+    var url = new URL(window.location.href);
+    if (lang === "en") url.searchParams.delete("lang"); else url.searchParams.set("lang", lang);
+    history.replaceState(null, "", url.pathname + url.search);
+  }
+
+  function runSuite(){
+    if (ran) return;
+    ran = true;
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce){
+      rows.forEach(function(r){
+        r.classList.add("on");
+        if (!r.dataset.pending) r.querySelector(".ms").textContent = r.dataset.ms + "ms";
+      });
+      return;
+    }
+    var i = 0;
+    (function step(){
+      if (i >= rows.length) return;
+      var r = rows[i];
+      r.classList.add("on");
+      if (!r.dataset.pending) r.querySelector(".ms").textContent = r.dataset.ms + "ms";
+      i++;
+      setTimeout(step, 150 + Math.random() * 140);
+    })();
+  }
+
+  document.getElementById("langs").addEventListener("click", function(e){
+    var b = e.target.closest("button[data-lang]");
+    if (b) apply(b.dataset.lang);
+  });
+
+  var requested = new URLSearchParams(window.location.search).get("lang");
+  apply(SUPPORTED.indexOf(requested) > -1 ? requested : "en");
+  setTimeout(runSuite, 350);
+})();
+</script>
+</body>
+</html>
