@@ -30,7 +30,7 @@ jobs:
         run: npm install
 
       - name: Install browsers
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install --with-deps chromium webkit
 
       - name: Run tests against an ephemeral local server
         run: npx playwright test
