@@ -13,7 +13,7 @@ export default defineConfig({
   },
   // The suite runs against an ephemeral copy of the build — never against production.
   webServer: {
-    command: 'npx --yes serve . -l 4173',
+    command: 'npx --yes serve . -l tcp://127.0.0.1:4173',
     url: 'http://127.0.0.1:4173',
     reuseExistingServer: !process.env.CI,
     timeout: 60_000,
