@@ -271,8 +271,14 @@
     margin-top:12px;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
     text-transform:uppercase;color:var(--ink-faint);
   }
-  .video-embed{position:relative;aspect-ratio:16/9;background:#000}
+  .video-embed{position:relative;aspect-ratio:16/9;background:var(--green-deep)}
   .video-embed iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .video-embed::after{
+    content:"";position:absolute;inset:0;border:2px solid var(--gold);
+    border-radius:calc(var(--radius) - 3px);pointer-events:none;
+    opacity:0;transition:opacity .2s ease;
+  }
+  .video-embed:focus-within::after{opacity:1}
   .show-copy .kicker{margin-bottom:12px;letter-spacing:.1em;text-wrap:balance}
   .show-copy h2{font-size:clamp(28px,3.2vw,42px);margin-bottom:14px}
   .show-copy .lead{color:var(--ink-soft);font-size:clamp(16px,1vw + 13px,18px)}
@@ -384,7 +390,6 @@
   @media (max-width:560px){
     .hud-id{font-size:10px;letter-spacing:.06em}
     .langs button{padding:5px 4px;font-size:10px}
-    .facade{aspect-ratio:16/10}
   }
   @media (max-width:480px){
     .metrics{grid-template-columns:1fr}
@@ -599,7 +604,7 @@
       <div class="show-grid">
         <div class="show-player">
           <div class="player" id="videoPlayer">
-            <a class="facade" id="videoFacade" href="https://youtube.com/@unflaky" target="_blank" rel="noopener" aria-label="Watch the Unflaky tool walkthrough on YouTube">
+            <a class="facade" id="videoFacade" href="https://www.youtube.com/watch?v=XVhTas9QSIo" target="_blank" rel="noopener" aria-label="Watch the Unflaky tool walkthrough on YouTube">
               <span class="facade-top" data-i="facadeTop"></span>
               <span class="facade-mid">
                 <span class="facade-play" aria-hidden="true">▶</span>
@@ -638,7 +643,7 @@
             </li>
           </ol>
           <blockquote data-i="shQuote"></blockquote>
-          <a class="cta" href="https://youtube.com/@unflaky" target="_blank" rel="noopener" data-i="shCta"></a>
+          <a class="cta" href="https://www.youtube.com/watch?v=XVhTas9QSIo" target="_blank" rel="noopener" data-i="shCta"></a>
         </div>
       </div>
     </div>
@@ -692,7 +697,7 @@
 </main>
 
 <script>
-const UNFLAKY_VIDEO_ID = "";
+const UNFLAKY_VIDEO_ID = "XVhTas9QSIo";
 
 (function(){
   var T = {
@@ -1259,20 +1264,35 @@ const UNFLAKY_VIDEO_ID = "";
   var facade = document.getElementById("videoFacade");
   var player = document.getElementById("videoPlayer");
   var overrideId = window.UNFLAKY_VIDEO_ID;
-  var videoId = (typeof overrideId === "string" && overrideId) ? overrideId : UNFLAKY_VIDEO_ID;
+  // A string override wins, so tests can force "" and exercise the plain-link fallback.
+  var videoId = typeof overrideId === "string" ? overrideId : UNFLAKY_VIDEO_ID;
+  var videoTitle = facade.getAttribute("aria-label") || "Unflaky tool walkthrough";
+
+  function embedVideo(){
+    if (!facade.isConnected) return;
+    var frame = document.createElement("div");
+    frame.className = "video-embed";
+    var iframe = document.createElement("iframe");
+    iframe.src = "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(videoId) + "?autoplay=1";
+    iframe.title = videoTitle;
+    iframe.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+    iframe.allowFullscreen = true;
+    iframe.setAttribute("tabindex", "0");
+    frame.appendChild(iframe);
+    player.replaceChild(frame, facade);
+    iframe.focus();
+  }
 
   if (videoId){
     facade.addEventListener("click", function(e){
       e.preventDefault();
-      var frame = document.createElement("div");
-      frame.className = "video-embed";
-      var iframe = document.createElement("iframe");
-      iframe.src = "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(videoId) + "?autoplay=1";
-      iframe.title = "Unflaky tool walkthrough";
-      iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-      iframe.allowFullscreen = true;
-      frame.appendChild(iframe);
-      player.replaceChild(frame, facade);
+      embedVideo();
+    });
+    facade.addEventListener("keydown", function(e){
+      if (e.key === " " || e.key === "Spacebar"){
+        e.preventDefault();
+        embedVideo();
+      }
     });
   }
 
