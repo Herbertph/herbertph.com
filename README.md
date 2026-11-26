@@ -1,12 +1,33 @@
 # herbertph.com
 
-Personal QA portfolio. Single static page, no build step.
+Personal SQA portfolio. Single static page, no build step: the page runs as a test
+run of seven tests that pass as you scroll.
 
 ## Local
 
     npm install
+    npx playwright install chromium webkit
     npm run dev      # http://127.0.0.1:4173
-    npm test         # Playwright suite
+    npm test         # Playwright suite (chromium + iPhone 13)
+
+Tests always run against port 4173. The suite covers both projects, so a change is
+only done when `npm test` is green.
+
+## Resume
+
+`resume.pdf` is generated from `resume/resume.html`:
+
+    npm run resume
+
+The source is plain HTML/CSS and is printed with Playwright (`page.pdf`). Commit both
+the source and the regenerated PDF.
+
+## Screenshots
+
+    npm run screenshots
+
+Writes desktop and mobile, light and dark captures to
+`docs/screenshots/homepage-test-run/` (served on port 4174, separate from the tests).
 
 ## Pipeline
 

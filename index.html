@@ -3,548 +3,1288 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Herbert Parasio — QA Engineer</title>
-<meta name="description" content="SQA Team Lead certifying casino and slot software across jurisdictions. Test design, SAS protocol, Playwright automation.">
+<title>Herbert Parasio · SQA Team Lead</title>
+<meta name="description" content="SQA Team Lead at BMM Testlabs. My team verifies casino and slot games against the math model and the rules of 10 jurisdictions.">
 <link rel="alternate" hreflang="en" href="https://herbertph.com/">
 <link rel="alternate" hreflang="pt" href="https://herbertph.com/?lang=pt">
 <link rel="alternate" hreflang="es" href="https://herbertph.com/?lang=es">
 <link rel="alternate" hreflang="fr" href="https://herbertph.com/?lang=fr">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://herbertph.com/">
+<meta property="og:title" content="Herbert Parasio · SQA Team Lead">
+<meta property="og:description" content="SQA Team Lead at BMM Testlabs. My team verifies casino and slot games against the math model and the rules of 10 jurisdictions.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400..700&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --paper:#E7E8E2; --panel:#F3F3EE; --ink:#14171A; --soft:#5B635F;
-    --rule:#C7C9C0; --pass:#1E5641; --mark:#A2401F;
-    --mono:"IBM Plex Mono",ui-monospace,monospace;
-    --sans:"IBM Plex Sans",system-ui,sans-serif;
-    --cond:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif;
+    --paper:#F6F1E7; --paper-2:#EFE7D8;
+    --ink:#17130B; --ink-soft:#4A4234; --ink-faint:#7A6F5C;
+    --line:#DCD0BA; --line-strong:#B9A888;
+    --green:#1C4D2E; --green-bright:#2E7D46; --green-deep:#10281A;
+    --brick:#BC4B1F; --brick-soft:#F3D9C8; --gold:#C79A3B;
+    --card:#FFFDF7; --panel:#17130B; --panel-ink:#F2EBDA; --panel-faint:#A99F88;
+    --pass-bg:#1C4D2E;
+    --shadow:0 18px 40px rgba(23, 19, 11, .10);
+    --radius:14px;
+    --serif:"Newsreader",Georgia,"Times New Roman",serif;
+    --sans:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Consolas,monospace;
+    --wrap:1140px;
+    --hud:58px;
   }
-  *{box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
-  a{color:inherit}
-  .wrap{max-width:980px;margin:0 auto;padding:0 24px}
-  .label{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
-  h2.sec{font-family:var(--cond);font-weight:700;font-size:clamp(28px,5vw,44px);letter-spacing:-.02em;line-height:1.05;margin:10px 0 0}
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper:#14110B; --paper-2:#1B1710;
+      --ink:#F0E9D8; --ink-soft:#C9BFA9; --ink-faint:#948A74;
+      --line:#332C1E; --line-strong:#55492F;
+      --green:#7FC493; --green-bright:#9AD6AC; --green-deep:#0C1F13;
+      --brick:#E88A5F; --brick-soft:#3A2317; --gold:#D9B45F;
+      --card:#1E1A12; --panel:#0D0B07; --panel-ink:#F2EBDA; --panel-faint:#8E8471;
+      --pass-bg:#1E5C36;
+      --shadow:0 18px 40px rgba(0, 0, 0, .45);
+    }
+  }
 
-  /* header */
-  .top{border-bottom:1px solid var(--rule);position:sticky;top:0;background:var(--paper);z-index:20}
-  .top .wrap{display:flex;justify-content:space-between;align-items:center;gap:14px;height:52px}
-  .sig{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.06em;white-space:nowrap}
-  .right{display:flex;align-items:center;gap:18px}
-  .stat{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--pass);display:flex;align-items:center;gap:7px}
-  .dot{width:7px;height:7px;border-radius:50%;background:var(--pass);flex:none}
-  .langs{display:flex;gap:2px}
+  *,*::before,*::after{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--sans);font-size:clamp(15px,.55vw + 13px,17px);line-height:1.62;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  }
+  h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:-.015em;line-height:1.08;margin:0;text-wrap:balance}
+  p{margin:0}
+  a{color:inherit}
+  ul,ol{list-style:none;margin:0;padding:0}
+  ::selection{background:var(--gold);color:#17130B}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 clamp(20px,5vw,48px)}
+  .kicker{
+    font-family:var(--mono);font-size:clamp(10px,.7vw + 8px,11px);font-weight:500;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--brick);
+  }
+  .sec-head{max-width:74ch;margin-bottom:clamp(28px,4vw,48px)}
+  .sec-head h2{font-size:clamp(28px,3.6vw,46px);margin-top:14px}
+  .sec-head .lead{margin-top:16px;color:var(--ink-soft);font-size:clamp(16px,1.1vw + 13px,19px)}
+
+  a:focus-visible,button:focus-visible{outline:2px solid var(--brick);outline-offset:3px;border-radius:2px}
+  .cta:focus-visible{outline-color:var(--ink)}
+  .facade:focus-visible{outline-color:var(--gold);outline-offset:-6px}
+
+  /* ---------- HUD ---------- */
+  .hud{position:fixed;inset:0 0 auto;z-index:40;background:var(--paper);border-bottom:1px solid var(--line)}
+  .hud-in{
+    max-width:var(--wrap);margin:0 auto;height:var(--hud);
+    padding:0 clamp(16px,4vw,48px);display:flex;align-items:center;gap:clamp(10px,1.6vw,22px);
+  }
+  .hud-id{
+    font-family:var(--mono);font-size:clamp(9px,.5vw + 7.6px,10.5px);font-weight:500;
+    letter-spacing:.1em;text-transform:uppercase;text-decoration:none;white-space:nowrap;
+  }
+  .hud-id:hover{color:var(--brick)}
+  .hud-progress{display:flex;align-items:center;gap:10px;flex:1;min-width:0;max-width:280px}
+  .track{flex:1;min-width:34px;height:4px;border-radius:2px;background:var(--line);overflow:hidden}
+  .track > span{display:block;width:0;height:100%;background:var(--green-bright);transition:width .35s ease}
+  .hud-count{
+    font-family:var(--mono);font-size:clamp(9px,.4vw + 8px,10.5px);letter-spacing:.08em;
+    color:var(--ink-soft);white-space:nowrap;
+  }
+  .hud-count.done{color:var(--green-bright);font-weight:500}
+  .hud-nav{display:flex;gap:clamp(9px,1.3vw,18px);margin-left:auto}
+  .hud-nav a{
+    font-family:var(--mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;
+    color:var(--ink-soft);text-decoration:none;padding:6px 1px;border-bottom:1px solid transparent;
+  }
+  .hud-nav a:hover{color:var(--ink);border-bottom-color:var(--brick)}
+  .langs{display:flex;gap:2px;flex:0 0 auto}
   .langs button{
-    font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.08em;
-    background:none;border:1px solid transparent;color:var(--soft);
-    padding:4px 6px;cursor:pointer;line-height:1;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;
+    background:none;border:1px solid transparent;color:var(--ink-soft);
+    min-width:26px;min-height:26px;display:inline-flex;align-items:center;justify-content:center;
+    padding:5px 5px;line-height:1;cursor:pointer;
   }
   .langs button:hover{color:var(--ink)}
-  .langs button[aria-current="true"]{color:var(--ink);border-color:var(--rule);background:var(--panel)}
+  .langs button[aria-current="true"]{color:var(--ink);border-color:var(--line-strong);background:var(--paper-2)}
 
-  /* hero */
-  .hero{padding:56px 0 64px}
-  .hero h1{font-family:var(--cond);font-weight:700;font-size:clamp(34px,6.4vw,64px);line-height:1.02;letter-spacing:-.025em;margin:18px 0 20px;max-width:17ch}
-  .hero p.lede{font-size:clamp(16px,2.2vw,19px);max-width:54ch;margin:0;color:#2A2F32}
-  .hero p.lede strong{font-weight:500}
-
-  /* run panel */
-  .run{background:var(--panel);border:1px solid var(--rule);margin-top:38px}
-  .run-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--rule)}
-  .run-head .file{font-family:var(--mono);font-size:11.5px;letter-spacing:.04em}
-  .run-head .who{font-family:var(--mono);font-size:11px;color:var(--soft);letter-spacing:.1em;text-transform:uppercase}
-  .run-body{padding:8px 0}
-  .row{display:flex;align-items:baseline;gap:12px;padding:7px 16px;font-family:var(--mono);font-size:13.5px;opacity:0;transform:translateY(4px)}
-  .row.on{opacity:1;transform:none;transition:opacity .28s ease,transform .28s ease}
-  .row .tick{width:14px;flex:none;color:var(--pass);font-weight:600}
-  .row.pending .tick{color:var(--mark)}
-  .row .name{flex:1;min-width:0}
-  .row .ms{color:var(--soft);font-size:12px;flex:none}
-  .row.pending .ms{color:var(--mark)}
-  .run-foot{border-top:1px solid var(--rule);padding:11px 16px;font-family:var(--mono);font-size:12px;color:var(--soft);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
-  .run-foot b{color:var(--pass);font-weight:600}
-
-  section{padding:64px 0;border-top:1px solid var(--rule)}
-  .sec-head{margin-bottom:36px}
-
-  .prac{border-top:1px solid var(--rule)}
-  .prac .item{display:grid;grid-template-columns:170px 1fr;gap:20px;padding:22px 0;border-bottom:1px solid var(--rule)}
-  .prac h3{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;margin:3px 0 0}
-  .prac p{margin:0;max-width:60ch}
-
-  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule)}
-  .card{background:var(--panel);padding:22px 20px;display:flex;flex-direction:column;gap:12px}
-  .card .top-line{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
-  .card h3{font-family:var(--cond);font-weight:700;font-size:23px;letter-spacing:-.01em;margin:0}
-  .card .verdict{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--pass);white-space:nowrap}
-  .card p{margin:0;font-size:15px;color:#2A2F32}
-  .card dl{margin:auto 0 0;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-family:var(--mono);font-size:11.5px;padding-top:12px;border-top:1px solid var(--rule)}
-  .card dt{color:var(--soft);letter-spacing:.08em;text-transform:uppercase;font-size:10.5px;padding-top:1px}
-  .card dd{margin:0}
-  .card a.link{font-family:var(--mono);font-size:11.5px;color:var(--mark);text-decoration:none;border-bottom:1px solid currentColor;align-self:flex-start}
-  .card a.link:hover{color:var(--ink)}
-
-  .cols{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
-  .cols h3{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);margin:0 0 12px;padding-bottom:8px;border-bottom:1px solid var(--rule)}
-  .cols ul{list-style:none;margin:0;padding:0;font-family:var(--mono);font-size:13.5px}
-  .cols li{padding:3px 0}
-  .cols li span{color:var(--soft);font-size:11px}
-
-  .signoff{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:start}
-  .signoff p{margin:0 0 22px;max-width:46ch}
-  .contact{list-style:none;margin:0;padding:0;font-family:var(--mono);font-size:14px}
-  .contact li{border-bottom:1px solid var(--rule);padding:11px 0;display:flex;justify-content:space-between;gap:12px}
-  .contact li:first-child{border-top:1px solid var(--rule)}
-  .contact a{text-decoration:none;border-bottom:1px solid var(--rule)}
-  .contact a:hover{border-color:var(--ink)}
-  .contact .k{color:var(--soft);font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding-top:3px}
-  .stamp{border:1.5px solid var(--pass);color:var(--pass);padding:18px;font-family:var(--mono);font-size:11.5px;line-height:1.7;letter-spacing:.04em}
-  .stamp .big{font-family:var(--cond);font-size:30px;font-weight:700;letter-spacing:.02em;display:block;margin-bottom:6px}
-
-  footer{border-top:1px solid var(--rule);padding:22px 0 40px}
-  footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:11.5px;color:var(--soft)}
-  footer a{color:var(--soft)}
-
-  a:focus-visible,button:focus-visible{outline:2px solid var(--mark);outline-offset:3px}
-
-  @media (max-width:860px){ .stat{display:none} }
-  @media (max-width:760px){
-    .grid,.cols,.signoff{grid-template-columns:1fr}
-    .prac .item{grid-template-columns:1fr;gap:8px}
-    section{padding:48px 0}
-    .hero{padding:40px 0 48px}
-    .sig{font-size:11px}
+  /* ---------- Hero ---------- */
+  main{padding-top:var(--hud)}
+  section{padding:clamp(52px,8vw,104px) 0;border-bottom:1px solid var(--line);scroll-margin-top:var(--hud)}
+  .hero{padding:clamp(40px,6vw,84px) 0 clamp(48px,6.5vw,84px)}
+  .hero-grid{
+    display:grid;grid-template-columns:minmax(0,1.06fr) minmax(0,.94fr);
+    gap:clamp(28px,4vw,56px);align-items:start;
   }
-  @media (prefers-reduced-motion:reduce){ .row{opacity:1;transform:none} html{scroll-behavior:auto} }
+  .hero .kicker{color:var(--ink-faint)}
+  .hero h1{font-size:clamp(34px,3.2vw + 14px,60px);margin:14px 0 20px;max-width:20ch}
+  .hero .lede{color:var(--ink-soft);font-size:clamp(16px,1.1vw + 13px,19px);max-width:54ch}
+  .hero .cue{
+    margin-top:clamp(24px,3vw,34px);font-family:var(--mono);font-size:10.5px;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--brick);
+  }
+  .sub-label{
+    margin-top:10px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;
+    color:var(--ink-faint);
+  }
+
+  /* ---------- herbert.spec.ts panel ---------- */
+  .spec{
+    background:var(--panel);color:var(--panel-ink);border:1px solid var(--ink);
+    border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;
+  }
+  .spec-head{
+    display:flex;justify-content:space-between;align-items:center;gap:12px;
+    padding:13px 18px;border-bottom:1px solid rgba(242,235,218,.14);
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--panel-faint);
+  }
+  .spec-head .file{color:var(--panel-ink);font-size:12px;letter-spacing:.01em;text-transform:none}
+  .spec-list{padding:7px 0}
+  .spec-item{
+    display:grid;grid-template-columns:16px minmax(0,1fr);gap:10px;align-items:start;
+    padding:9px 18px;border-left:2px solid transparent;
+    font-family:var(--mono);font-size:12px;line-height:1.55;color:var(--panel-faint);
+  }
+  .spec-mark{font-weight:600}
+  .spec-item.pending .spec-mark::before{content:"·"}
+  .spec-item.pending.current .spec-mark::before{content:"▸";color:var(--gold)}
+  .spec-item.passed{color:var(--panel-ink)}
+  .spec-item.passed .spec-mark{color:var(--green-bright)}
+  .spec-item.passed .spec-mark::before{content:"✓"}
+  .spec-item.current{background:rgba(199,154,59,.12);border-left-color:var(--gold);color:var(--panel-ink)}
+  .spec-foot{
+    display:flex;justify-content:space-between;align-items:center;gap:12px;
+    padding:12px 18px;border-top:1px solid rgba(242,235,218,.14);
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--panel-faint);
+  }
+  .spec.done #specStatus{color:var(--green-bright)}
+  #specCheck{color:var(--green-bright);font-weight:600}
+  @media (prefers-color-scheme: dark){
+    .spec{border-color:var(--line-strong)}
+  }
+
+  /* ---------- Story ---------- */
+  .story-body{position:relative;padding-left:clamp(22px,4vw,48px)}
+  .spine{position:absolute;left:0;top:4px;bottom:4px;width:2px;background:var(--line);border-radius:2px}
+  #spineProgress{display:block;width:100%;height:0;background:var(--brick);border-radius:2px}
+  .chapter{
+    padding:clamp(22px,3.4vw,40px) 0;border-top:1px solid var(--line);
+    opacity:.4;transform:translateY(10px);transition:opacity .5s ease,transform .5s ease;
+  }
+  .chapter:first-child{border-top:0;padding-top:0}
+  .chapter.in{opacity:1;transform:none}
+  .chapter h3{font-size:clamp(22px,2.2vw,31px);margin:10px 0 12px;max-width:30ch}
+  .chapter .ch-body{color:var(--ink-soft);max-width:66ch}
+  .chapter .ch-line{
+    margin-top:16px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;
+    color:var(--ink-faint);line-height:1.7;
+  }
+  .chapter .ch-line .k{color:var(--brick);letter-spacing:.12em;text-transform:uppercase}
+  .chapter-dark{
+    margin:clamp(18px,3vw,36px) 0;padding:clamp(26px,4vw,48px);
+    background:var(--green-deep);color:var(--panel-ink);border:0;border-radius:var(--radius);
+  }
+  .chapter-dark h3{color:var(--panel-ink)}
+  .chapter-dark .ch-body{color:#CFC7B3}
+  .chapter-dark .kicker{color:var(--gold)}
+  .chapter-dark .ch-line{color:var(--panel-faint)}
+  .chapter-dark .ch-line .k{color:var(--gold)}
+
+  /* ---------- Method ---------- */
+  .steps{border-top:1px solid var(--line)}
+  .step{
+    display:grid;grid-template-columns:120px minmax(0,1fr);gap:clamp(14px,3vw,40px);
+    padding:clamp(18px,2.4vw,26px) 0;border-bottom:1px solid var(--line);
+  }
+  .step-num{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--brick);padding-top:7px}
+  .step h3{font-size:clamp(20px,1.8vw,26px);margin-bottom:8px}
+  .step p{color:var(--ink-soft);max-width:64ch}
+  .callout{
+    margin-top:clamp(28px,4vw,44px);padding:clamp(20px,3vw,30px);
+    background:var(--brick-soft);border-left:3px solid var(--brick);
+    border-radius:0 var(--radius) var(--radius) 0;
+  }
+  .callout h3{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.14em;color:var(--brick);margin-bottom:10px}
+  .callout p{max-width:88ch}
+
+  /* ---------- Evidence ---------- */
+  .metrics{
+    display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1px;
+    background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;
+  }
+  .metric{background:var(--card);padding:clamp(16px,2.2vw,28px)}
+  .metric .num{display:block;font-family:var(--serif);font-weight:600;color:var(--green);font-size:clamp(32px,3.4vw,54px);line-height:1}
+  .metric .lbl{
+    display:block;margin-top:12px;font-family:var(--mono);font-size:10px;line-height:1.6;
+    letter-spacing:.09em;text-transform:uppercase;color:var(--ink-faint);
+  }
+  .ev-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(14px,2vw,26px);margin-top:clamp(26px,3.6vw,44px)}
+  .ev-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(20px,2.4vw,30px);box-shadow:var(--shadow)}
+  .ev-card .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--brick);margin-bottom:10px}
+  .ev-card h3{font-size:clamp(21px,1.8vw,26px);margin-bottom:10px}
+  .ev-card p{color:var(--ink-soft)}
+  .toolbox{margin-top:clamp(34px,4.6vw,60px);padding-top:clamp(22px,3vw,32px);border-top:1px solid var(--line)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .chips li{
+    font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--ink-soft);
+    border:1px solid var(--line-strong);border-radius:999px;padding:6px 12px;background:var(--card);
+  }
+
+  /* ---------- Showcase ---------- */
+  #showcase{background:var(--paper-2)}
+  .show-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:clamp(28px,4.5vw,64px);align-items:start}
+  .player{
+    background:var(--green-deep);border-top:3px solid var(--gold);border-radius:var(--radius);
+    box-shadow:var(--shadow);overflow:hidden;
+  }
+  .facade{
+    display:grid;grid-template-rows:auto 1fr auto;gap:clamp(14px,2vw,24px);
+    aspect-ratio:16/9;padding:clamp(18px,3vw,38px);text-decoration:none;color:var(--panel-ink);
+    background:
+      radial-gradient(120% 90% at 12% 8%,rgba(199,154,59,.16),rgba(199,154,59,0) 55%),
+      linear-gradient(155deg,#12301F 0%,var(--green-deep) 58%,#0B1D13 100%);
+    transition:filter .25s ease;
+  }
+  .facade:hover{filter:brightness(1.08)}
+  .facade-top{
+    font-family:var(--mono);font-size:clamp(9px,.5vw + 7.4px,11px);letter-spacing:.18em;
+    text-transform:uppercase;color:var(--gold);
+  }
+  .facade-mid{display:flex;align-items:center;gap:clamp(12px,2vw,22px);min-width:0}
+  .facade-play{
+    flex:0 0 auto;display:grid;place-items:center;width:clamp(42px,5vw,60px);height:clamp(42px,5vw,60px);
+    border:1px solid rgba(242,235,218,.5);border-radius:50%;font-size:clamp(13px,1.4vw,17px);
+    color:var(--panel-ink);padding-left:3px;
+  }
+  .facade:hover .facade-play{border-color:var(--gold);color:var(--gold)}
+  .facade-word{
+    font-family:var(--serif);font-style:italic;font-weight:500;
+    font-size:clamp(44px,7.4vw,96px);line-height:.9;letter-spacing:-.03em;min-width:0;
+    overflow:hidden;text-overflow:ellipsis;
+  }
+  .facade-bottom{
+    font-family:var(--mono);font-size:clamp(9px,.5vw + 7.4px,11px);letter-spacing:.16em;
+    text-transform:uppercase;color:var(--panel-faint);
+    display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  }
+  .player-caption{
+    margin-top:12px;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--ink-faint);
+  }
+  .video-embed{position:relative;aspect-ratio:16/9;background:#000}
+  .video-embed iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .show-copy .kicker{margin-bottom:12px;letter-spacing:.1em;text-wrap:balance}
+  .show-copy h2{font-size:clamp(28px,3.2vw,42px);margin-bottom:14px}
+  .show-copy .lead{color:var(--ink-soft);font-size:clamp(16px,1vw + 13px,18px)}
+  .player-desc{margin-top:14px;color:var(--ink-soft);font-size:clamp(14px,.6vw + 12px,16px)}
+  .agents{
+    margin-top:18px;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--ink-faint);line-height:2;
+  }
+  .agents .k{color:var(--brick);letter-spacing:.12em}
+  .blocks{margin-top:clamp(22px,3vw,30px);border-top:1px solid var(--line)}
+  .blocks li{padding:16px 0;border-bottom:1px solid var(--line)}
+  .blocks .n{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--brick)}
+  .blocks h3{font-size:clamp(19px,1.7vw,24px);margin:6px 0 6px}
+  .blocks p{color:var(--ink-soft);font-size:clamp(14px,.5vw + 12px,16px)}
+  blockquote{
+    margin:clamp(22px,3vw,30px) 0 0;padding-left:18px;border-left:2px solid var(--gold);
+    font-family:var(--serif);font-size:clamp(18px,1.5vw,22px);line-height:1.5;color:var(--ink);
+  }
+  .cta{
+    display:inline-block;margin-top:clamp(22px,3vw,30px);font-family:var(--mono);font-size:12px;
+    letter-spacing:.06em;text-decoration:none;color:var(--paper);background:var(--brick);
+    padding:12px 18px;border-radius:6px;
+  }
+  .cta:hover{background:var(--ink);color:var(--paper)}
+
+  /* ---------- Next ---------- */
+  .next-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(18px,2.6vw,32px)}
+  .next-item{border-top:2px solid var(--line-strong);padding-top:16px}
+  .next-item .when{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--brick)}
+  .next-item h3{font-size:clamp(20px,1.8vw,26px);margin:10px 0 8px}
+  .next-item p{color:var(--ink-soft);font-size:clamp(14px,.5vw + 12px,16px)}
+
+  /* ---------- Sign-off ---------- */
+  #signoff{border-bottom:0;background:var(--paper)}
+  .pass-card{
+    position:relative;background:var(--pass-bg);color:#F4EFE0;
+    border-radius:calc(var(--radius) + 4px);padding:clamp(26px,4.6vw,60px);
+    box-shadow:var(--shadow),inset 0 0 0 1px rgba(244,239,224,.16);
+  }
+  .stamp{
+    display:inline-block;font-family:var(--mono);font-size:12px;letter-spacing:.24em;
+    border:2px solid currentColor;border-radius:6px;padding:9px 16px;margin-bottom:clamp(20px,3vw,28px);
+    background:rgba(244,239,224,.07);
+    transform:rotate(-3deg) scale(.96);transform-origin:left center;
+    visibility:hidden;opacity:0;transition:opacity .5s ease,transform .5s ease;
+  }
+  .pass-card.visible .stamp{visibility:visible;opacity:1;transform:rotate(-3deg) scale(1)}
+  .pass-card h2{font-size:clamp(27px,3.4vw,44px);max-width:26ch;margin-bottom:16px;color:#FBF7EC}
+  .pass-body{max-width:66ch;color:rgba(244,239,224,.86)}
+  .pass-links{
+    display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;
+    margin-top:clamp(24px,3.6vw,40px);background:rgba(244,239,224,.24);
+  }
+  .pass-links li{display:flex}
+  .pass-links a{
+    display:flex;align-items:center;flex:1;min-width:0;padding:15px 16px;
+    background:var(--pass-bg);text-decoration:none;overflow-wrap:anywhere;
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.07em;color:#F4EFE0;
+  }
+  .pass-links a:hover{background:rgba(0,0,0,.16);color:#FFFFFF}
+  .pass-card a:focus-visible{outline-color:var(--gold)}
+  .site-foot{
+    margin-top:clamp(30px,4.5vw,52px);padding-top:20px;border-top:1px solid var(--line);
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;line-height:1.9;color:var(--ink-faint);
+  }
+
+  /* ---------- Breakpoints ---------- */
+  @media (min-width:921px){
+    .show-player{position:sticky;top:calc(var(--hud) + 20px)}
+  }
+  @media (max-width:1180px){
+    .hero h1{max-width:20ch}
+  }
+  @media (max-width:1000px){
+    .hud-nav{display:none}
+    .hud-progress{max-width:240px}
+    .langs{margin-left:auto}
+  }
+  @media (max-width:920px){
+    .show-grid{grid-template-columns:1fr}
+    .show-player{order:-1}
+  }
+  @media (max-width:900px){
+    .hero-grid{grid-template-columns:1fr}
+    .hero h1{max-width:24ch}
+    .spec{max-width:620px}
+  }
+  @media (max-width:860px){
+    .ev-grid{grid-template-columns:1fr}
+    .metrics{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .metric:nth-child(4),.metric:nth-child(5){grid-column:auto}
+    .pass-links{grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+  @media (max-width:760px){
+    .next-grid{grid-template-columns:1fr}
+    .step{grid-template-columns:1fr;gap:6px}
+    .step-num{padding-top:0}
+  }
+  @media (max-width:720px){
+    section{padding:clamp(44px,7vw,64px) 0}
+  }
+  @media (max-width:640px){
+    .hud-progress{flex:0 0 auto}
+    .track{display:none}
+    .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .metric:last-child{grid-column:1 / -1}
+    .story-body{padding-left:22px}
+  }
+  @media (max-width:560px){
+    .hud-id{font-size:10px;letter-spacing:.06em}
+    .langs button{padding:5px 4px;font-size:10px}
+    .facade{aspect-ratio:16/10}
+  }
+  @media (max-width:480px){
+    .metrics{grid-template-columns:1fr}
+    .metric:last-child{grid-column:auto}
+    .chips li{font-size:10px;padding:5px 10px}
+    .spec-item{font-size:11px;padding:7px 14px}
+    .pass-links{grid-template-columns:1fr}
+  }
+  @media (max-width:420px){
+    .hud-in{gap:8px;padding:0 12px}
+    .hud-id{white-space:normal;line-height:1.3;max-width:134px}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important}
+    .chapter{opacity:1;transform:none}
+  }
 </style>
 </head>
 <body>
 
-<header class="top">
-  <div class="wrap">
-    <span class="sig">Herbert Parasio — QA Engineer</span>
-    <div class="right">
-      <span class="stat"><span class="dot"></span><span data-i="status"></span></span>
-      <nav class="langs" id="langs" aria-label="Language">
-        <button type="button" data-lang="en" lang="en">EN</button>
-        <button type="button" data-lang="pt" lang="pt">PT</button>
-        <button type="button" data-lang="es" lang="es">ES</button>
-        <button type="button" data-lang="fr" lang="fr">FR</button>
-      </nav>
+<header class="hud">
+  <div class="hud-in">
+    <a class="hud-id" href="#top" data-i="hudName">HERBERT PARASIO · SQA TEAM LEAD</a>
+    <div class="hud-progress">
+      <div class="track" id="progress" role="progressbar" aria-label="Test run progress" aria-valuemin="0" aria-valuemax="7" aria-valuenow="0"><span id="progressFill"></span></div>
+      <span class="hud-count" id="runCount">RUN 0/7</span>
     </div>
+    <nav class="hud-nav" aria-label="Sections">
+      <a href="#story" data-i="navStory">Story</a>
+      <a href="#method" data-i="navMethod">Method</a>
+      <a href="#evidence" data-i="navEvidence">Evidence</a>
+      <a href="#showcase" data-i="navVideo">Video</a>
+      <a href="#next" data-i="navNext">Next</a>
+      <a href="#signoff" data-i="navSignoff">Sign-off</a>
+    </nav>
+    <nav class="langs" id="langs" aria-label="Language">
+      <button type="button" data-lang="en" lang="en">EN</button>
+      <button type="button" data-lang="pt" lang="pt">PT</button>
+      <button type="button" data-lang="es" lang="es">ES</button>
+      <button type="button" data-lang="fr" lang="fr">FR</button>
+    </nav>
   </div>
 </header>
 
 <main>
-  <div class="wrap hero">
-    <span class="label" data-i="eyebrow"></span>
-    <h1 data-i="h1"></h1>
-    <p class="lede" data-ihtml="lede"></p>
+  <section class="hero" id="top">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="kicker" data-i="heroLabel"></p>
+        <p class="sub-label" data-i="heroSub"></p>
+        <h1 data-i="h1"></h1>
+        <p class="lede" data-i="lede"></p>
+        <p class="cue" data-i="cue"></p>
+      </div>
 
-    <div class="run" id="run">
-      <div class="run-head">
-        <span class="file">herbert.spec.ts</span>
-        <span class="who" data-i="runWho"></span>
-      </div>
-      <div class="run-body" id="rows">
-        <div class="row" data-ms="14"><span class="tick">✓</span><span class="name" data-i="r1"></span><span class="ms"></span></div>
-        <div class="row" data-ms="38"><span class="tick">✓</span><span class="name" data-i="r2"></span><span class="ms"></span></div>
-        <div class="row" data-ms="22"><span class="tick">✓</span><span class="name" data-i="r3"></span><span class="ms"></span></div>
-        <div class="row" data-ms="51"><span class="tick">✓</span><span class="name" data-i="r4"></span><span class="ms"></span></div>
-        <div class="row" data-ms="19"><span class="tick">✓</span><span class="name" data-i="r5"></span><span class="ms"></span></div>
-        <div class="row" data-ms="9"><span class="tick">✓</span><span class="name" data-i="r6"></span><span class="ms"></span></div>
-        <div class="row" data-ms="171"><span class="tick">✓</span><span class="name" data-i="r7"></span><span class="ms" data-i="pending"></span></div>
-      </div>
-      <div class="run-foot">
-        <span id="summary"></span>
-        <span data-i="flaky"></span>
+      <aside class="spec" id="spec" aria-label="herbert.spec.ts">
+        <div class="spec-head">
+          <span class="file">herbert.spec.ts</span>
+          <span data-i="specRun"></span>
+        </div>
+        <ol class="spec-list" id="specList">
+          <li class="spec-item pending" data-test="1" data-state="pending"><span class="spec-mark" aria-hidden="true"></span><span class="spec-name" data-i="t1"></span></li>
+          <li class="spec-item pending" data-test="2" data-state="pending"><span class="spec-mark" aria-hidden="true"></span><span class="spec-name" data-i="t2"></span></li>
+          <li class="spec-item pending" data-test="3" data-state="pending"><span class="spec-mark" aria-hidden="true"></span><span class="spec-name" data-i="t3"></span></li>
+          <li class="spec-item pending" data-test="4" data-state="pending"><span class="spec-mark" aria-hidden="true"></span><span class="spec-name" data-i="t4"></span></li>
+          <li class="spec-item pending current" data-test="5" data-state="pending"><span class="spec-mark" aria-hidden="true"></span><span class="spec-name" data-i="t5"></span></li>
+          <li class="spec-item pending" data-test="6" data-state="pending"><span class="spec-mark" aria-hidden="true"></span><span class="spec-name" data-i="t6"></span></li>
+          <li class="spec-item pending" data-test="7" data-state="pending"><span class="spec-mark" aria-hidden="true"></span><span class="spec-name" data-i="t7"></span></li>
+        </ol>
+        <div class="spec-foot">
+          <span id="specStatus">RUNNING</span>
+          <span id="specCheck" aria-hidden="true"></span>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section id="story">
+    <div class="wrap">
+      <header class="sec-head">
+        <p class="kicker" data-i="storyKicker"></p>
+        <h2 data-i="storyH2"></h2>
+        <p class="lead" data-i="storyBody"></p>
+      </header>
+      <div class="story-body">
+        <div class="spine" id="spine" aria-hidden="true"><div id="spineProgress"></div></div>
+        <div class="chapters">
+          <article class="chapter" data-chapter="0">
+            <p class="kicker" data-i="c1k"></p>
+            <h3 data-i="c1h"></h3>
+            <p class="ch-body" data-i="c1b"></p>
+            <p class="ch-line"><span class="k" data-i="c1lk"></span> <span data-i="c1lv"></span></p>
+          </article>
+
+          <article class="chapter" data-chapter="1">
+            <p class="kicker" data-i="c2k"></p>
+            <h3 data-i="c2h"></h3>
+            <p class="ch-body" data-i="c2b"></p>
+            <p class="ch-line"><span class="k" data-i="c2lk"></span> <span data-i="c2lv"></span></p>
+          </article>
+
+          <article class="chapter" data-chapter="2">
+            <p class="kicker" data-i="c3k"></p>
+            <h3 data-i="c3h"></h3>
+            <p class="ch-body" data-i="c3b"></p>
+            <p class="ch-line"><span class="k" data-i="c3lk"></span> <span data-i="c3lv"></span></p>
+          </article>
+
+          <article class="chapter" data-chapter="3">
+            <p class="kicker" data-i="c4k"></p>
+            <h3 data-i="c4h"></h3>
+            <p class="ch-body" data-i="c4b"></p>
+            <p class="ch-line"><span class="k" data-i="c4lk"></span> <span data-i="c4lv"></span></p>
+          </article>
+
+          <article class="chapter chapter-dark" data-chapter="4">
+            <p class="kicker" data-i="c5k"></p>
+            <h3 data-i="c5h"></h3>
+            <p class="ch-body" data-i="c5b"></p>
+            <p class="ch-line"><span class="k" data-i="c5lk"></span> <span data-i="c5lv"></span></p>
+          </article>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <section id="practice">
+  <section id="method">
     <div class="wrap">
-      <div class="sec-head">
-        <span class="label" data-i="pLabel"></span>
-        <h2 class="sec" data-i="pTitle"></h2>
-      </div>
-      <div class="prac">
-        <div class="item"><h3 data-i="p1h"></h3><p data-i="p1b"></p></div>
-        <div class="item"><h3 data-i="p2h"></h3><p data-i="p2b"></p></div>
-        <div class="item"><h3 data-i="p3h"></h3><p data-i="p3b"></p></div>
-        <div class="item"><h3 data-i="p4h"></h3><p data-i="p4b"></p></div>
-      </div>
+      <header class="sec-head">
+        <p class="kicker" data-i="mKicker"></p>
+        <h2 data-i="mH2"></h2>
+        <p class="lead" data-i="mLead"></p>
+      </header>
+      <ol class="steps">
+        <li class="step">
+          <span class="step-num" data-i="s1n"></span>
+          <div><h3 data-i="s1t"></h3><p data-i="s1b"></p></div>
+        </li>
+        <li class="step">
+          <span class="step-num" data-i="s2n"></span>
+          <div><h3 data-i="s2t"></h3><p data-i="s2b"></p></div>
+        </li>
+        <li class="step">
+          <span class="step-num" data-i="s3n"></span>
+          <div><h3 data-i="s3t"></h3><p data-i="s3b"></p></div>
+        </li>
+        <li class="step">
+          <span class="step-num" data-i="s4n"></span>
+          <div><h3 data-i="s4t"></h3><p data-i="s4b"></p></div>
+        </li>
+      </ol>
+      <aside class="callout">
+        <h3 data-i="calloutK"></h3>
+        <p data-i="calloutB"></p>
+      </aside>
     </div>
   </section>
 
   <section id="evidence">
     <div class="wrap">
-      <div class="sec-head">
-        <span class="label" data-i="eLabel"></span>
-        <h2 class="sec" data-i="eTitle"></h2>
+      <header class="sec-head">
+        <h2 data-i="evH2"></h2>
+      </header>
+      <div class="metrics">
+        <div class="metric"><span class="num">11</span><span class="lbl" data-i="m1l"></span></div>
+        <div class="metric"><span class="num">10</span><span class="lbl" data-i="m2l"></span></div>
+        <div class="metric"><span class="num">~15</span><span class="lbl" data-i="m3l"></span></div>
+        <div class="metric"><span class="num">95%</span><span class="lbl" data-i="m4l"></span></div>
+        <div class="metric"><span class="num">98%</span><span class="lbl" data-i="m5l"></span></div>
       </div>
-      <div class="grid">
-
-        <article class="card">
-          <div class="top-line"><h3>FLUXO</h3><span class="verdict" data-i="v1"></span></div>
-          <p data-i="c1b"></p>
-          <a class="link" href="https://fluxo-production-052e.up.railway.app/" target="_blank" rel="noopener" data-i="seeProject"></a>
-          <dl>
-            <dt data-i="dStack"></dt><dd>React · Node · Railway</dd>
-            <dt data-i="dRole"></dt><dd data-i="c1role"></dd>
-          </dl>
+      <div class="ev-grid">
+        <article class="ev-card">
+          <p class="lbl" data-i="ev1l"></p>
+          <h3 data-i="ev1h"></h3>
+          <p data-i="ev1b"></p>
         </article>
-
-        <article class="card">
-          <div class="top-line"><h3>playwright-FluxoBjj</h3><span class="verdict" data-i="v2"></span></div>
-          <p data-i="c2b"></p>
-          <a class="link" href="https://github.com/Herbertph/playwright-FluxoBjj" target="_blank" rel="noopener" data-i="readTests"></a>
-          <dl>
-            <dt data-i="dStack"></dt><dd>Playwright · TypeScript</dd>
-            <dt data-i="dCovers"></dt><dd data-i="c2covers"></dd>
-          </dl>
+        <article class="ev-card">
+          <p class="lbl" data-i="ev2l"></p>
+          <h3 data-i="ev2h"></h3>
+          <p data-i="ev2b"></p>
         </article>
-
-        <article class="card">
-          <div class="top-line"><h3>QA Operations</h3><span class="verdict" data-i="v3"></span></div>
-          <p data-i="c3b"></p>
-          <a class="link" href="https://github.com/Herbertph/qa-ops-board" target="_blank" rel="noopener" data-i="seeProject"></a>
-          <dl>
-            <dt data-i="dStack"></dt><dd data-i="c3stack"></dd>
-            <dt data-i="dUsers"></dt><dd data-i="c3users"></dd>
-          </dl>
+        <article class="ev-card">
+          <p class="lbl" data-i="ev3l"></p>
+          <h3 data-i="ev3h"></h3>
+          <p data-i="ev3b"></p>
         </article>
-
       </div>
-    </div>
-  </section>
-
-  <section id="toolbox">
-    <div class="wrap">
-      <div class="sec-head">
-        <span class="label" data-i="tLabel"></span>
-        <h2 class="sec" data-i="tTitle"></h2>
-      </div>
-      <div class="cols">
-        <div>
-          <h3 data-i="tTesting"></h3>
-          <ul>
-            <li>Playwright</li>
-            <li data-i="tk1"></li>
-            <li data-i="tk2"></li>
-            <li data-i="tk3"></li>
-            <li data-i="tk4"></li>
-          </ul>
-        </div>
-        <div>
-          <h3 data-i="tEng"></h3>
-          <ul>
-            <li>JavaScript · TypeScript · Java</li>
-            <li>React · Node</li>
-            <li>SQL</li>
-            <li>Git · GitHub Actions</li>
-            <li data-i="tk5"></li>
-          </ul>
-        </div>
-        <div>
-          <h3 data-i="tLang"></h3>
-          <ul>
-            <li data-i="lg1"></li>
-            <li data-i="lg2"></li>
-            <li data-i="lg3"></li>
-            <li data-i="lg4"></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="contact">
-    <div class="wrap signoff">
-      <div>
-        <span class="label" data-i="sLabel"></span>
-        <h2 class="sec" style="margin-bottom:20px" data-i="sTitle"></h2>
-        <p data-i="sBody"></p>
-        <ul class="contact">
-          <li><span class="k" data-i="kEmail"></span><a href="mailto:herbert.parasio@gmail.com">herbert.parasio@gmail.com</a></li>
-          <li><span class="k">LinkedIn</span><a href="https://www.linkedin.com/in/herbertph/" target="_blank" rel="noopener">/in/herbertph</a></li>
-          <li><span class="k">GitHub</span><a href="https://github.com/Herbertph" target="_blank" rel="noopener">@Herbertph</a></li>
-          <li><span class="k" data-i="kResume"></span><a href="/resume.pdf" data-i="kResumeLink"></a></li>
+      <div class="toolbox">
+        <p class="kicker" data-i="tbKicker"></p>
+        <ul class="chips">
+          <li data-i="tb1"></li>
+          <li data-i="tb2"></li>
+          <li data-i="tb3"></li>
+          <li data-i="tb4"></li>
+          <li data-i="tb5"></li>
+          <li data-i="tb6"></li>
+          <li data-i="tb7"></li>
+          <li data-i="tb8"></li>
+          <li data-i="tb9"></li>
+          <li data-i="tb10"></li>
+          <li data-i="tb11"></li>
+          <li data-i="tb12"></li>
         </ul>
       </div>
-      <div class="stamp">
-        <span class="big" data-i="stampBig"></span>
-        <span data-i="stampName"></span><br>
-        <span data-i="stampRole"></span><br>
-        <span data-i="stampBase"></span><br>
-        <span data-i="stampStatus"></span><br>
-        <span data-i="stampVerified"></span> <span id="today"></span>
+    </div>
+  </section>
+
+  <section id="showcase">
+    <div class="wrap">
+      <div class="show-grid">
+        <div class="show-player">
+          <div class="player" id="videoPlayer">
+            <a class="facade" id="videoFacade" href="https://youtube.com/@unflaky" target="_blank" rel="noopener" aria-label="Watch the Unflaky tool walkthrough on YouTube">
+              <span class="facade-top" data-i="facadeTop"></span>
+              <span class="facade-mid">
+                <span class="facade-play" aria-hidden="true">▶</span>
+                <span class="facade-word" aria-hidden="true">unflaky</span>
+              </span>
+              <span class="facade-bottom"><span data-i="facadeBottom"></span></span>
+            </a>
+          </div>
+          <p class="player-caption" data-i="playerCaption"></p>
+        </div>
+
+        <div class="show-copy">
+          <p class="kicker" data-i="shKicker"></p>
+          <h2 data-i="shH2"></h2>
+          <p class="lead" data-i="shLead"></p>
+          <p class="player-desc" data-i="playerDesc"></p>
+          <p class="agents">
+            <span class="k" data-i="agentsLabel"></span>
+            QA MANAGER · FUNCTIONAL QA · AUTOMATION QA · API QA · REGRESSION QA · MOBILE / UI QA
+          </p>
+          <ol class="blocks">
+            <li>
+              <span class="n" data-i="b1n"></span>
+              <h3 data-i="b1h"></h3>
+              <p data-i="b1b"></p>
+            </li>
+            <li>
+              <span class="n" data-i="b2n"></span>
+              <h3 data-i="b2h"></h3>
+              <p data-i="b2b"></p>
+            </li>
+            <li>
+              <span class="n" data-i="b3n"></span>
+              <h3 data-i="b3h"></h3>
+              <p data-i="b3b"></p>
+            </li>
+          </ol>
+          <blockquote data-i="shQuote"></blockquote>
+          <a class="cta" href="https://youtube.com/@unflaky" target="_blank" rel="noopener" data-i="shCta"></a>
+        </div>
       </div>
+    </div>
+  </section>
+
+  <section id="next">
+    <div class="wrap">
+      <header class="sec-head">
+        <p class="kicker" data-i="nxKicker"></p>
+        <h2 data-i="nxH2"></h2>
+        <p class="lead" data-i="nxBody"></p>
+      </header>
+      <div class="next-grid">
+        <div class="next-item">
+          <p class="when" data-i="x1w"></p>
+          <h3 data-i="x1h"></h3>
+          <p data-i="x1b"></p>
+        </div>
+        <div class="next-item">
+          <p class="when" data-i="x2w"></p>
+          <h3 data-i="x2h"></h3>
+          <p data-i="x2b"></p>
+        </div>
+        <div class="next-item">
+          <p class="when" data-i="x3w"></p>
+          <h3 data-i="x3h"></h3>
+          <p data-i="x3b"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="signoff">
+    <div class="wrap">
+      <div class="pass-card" id="passCard">
+        <span class="stamp" data-i="stamp"></span>
+        <h2 data-i="soH2"></h2>
+        <p class="pass-body" data-i="soBody"></p>
+        <ul class="pass-links">
+          <li><a href="https://linkedin.com/in/herbert-cunha" target="_blank" rel="noopener" data-i="lkIn"></a></li>
+          <li><a href="https://github.com/Herbertph" target="_blank" rel="noopener" data-i="lkGh"></a></li>
+          <li><a href="https://youtube.com/@unflaky" target="_blank" rel="noopener" data-i="lkYt"></a></li>
+          <li><a href="https://x.com/herbertbuilds" target="_blank" rel="noopener" data-i="lkX"></a></li>
+        </ul>
+      </div>
+      <footer class="site-foot">
+        <p data-i="foot"></p>
+      </footer>
     </div>
   </section>
 </main>
 
-<footer>
-  <div class="wrap">
-    <span data-i="footNote"></span>
-    <span><a href="https://github.com/Herbertph" target="_blank" rel="noopener" data-i="footLink"></a></span>
-  </div>
-</footer>
-
 <script>
+const UNFLAKY_VIDEO_ID = "";
+
 (function(){
   var T = {
     en:{
-      title:"Herbert P. — QA Engineer",
-      desc:"SQA Team Lead certifying casino and slot software across jurisdictions. Test design, SAS protocol, Playwright automation.",
-      locale:"en-CA",
-      status:"Open to relocation",
-      eyebrow:"Moncton, Canada · Gaming & regulated software",
-      h1:"I test the software regulators have to sign off on.",
-      lede:"SQA Team Lead at a gaming certification lab, where a missed defect means a rejected submission in a whole jurisdiction. <strong>Now putting that same rigor into automated suites with Playwright.</strong>",
-      runWho:"Test run",
-      r1:"leads a software QA team at BMM Test Labs",
-      r2:"certifies slot and casino games across multiple jurisdictions",
-      r3:"reads and validates SAS protocol traffic",
-      r4:"builds internal tooling the QA team uses daily",
-      r5:"writes Playwright suites against real applications",
-      r6:"works in English, Portuguese, Spanish and French",
-      r7:"ISTQB Foundation Level certification",
-      pending:"scheduled", flaky:"0 flaky", summary:"{p} passed · {s} scheduled",
-      pLabel:"How I work", pTitle:"Compliance taught me to write tests that hold up.",
-      p1h:"Test design", p1b:"Requirements come as regulatory rules, not user stories. I turn them into coverage a third party can audit — traceable cases, reproducible steps, evidence attached to every result.",
-      p2h:"Automation", p2b:"Playwright suites built for stability first: resilient locators, explicit waits over sleeps, and a hard rule that a flaky test gets fixed or deleted — never re-run until it's green.",
-      p3h:"Release", p3b:"Pipelines that build the app, serve it in an ephemeral environment, run the suite against that build, and only then deploy. Production is never the test target.",
-      p4h:"Team", p4b:"Leading a QA team means defect triage that engineers trust: severity that maps to real impact, reports written so the fix is obvious, and process that survives the busy weeks.",
-      eLabel:"Evidence", eTitle:"Things I built, and then tested.",
-      v1:"Live", v2:"Suite passing", v3:"In use", v4:"In progress",
-      c1b:"A web app that maps Brazilian jiu-jitsu positions and the transitions between them, so a practitioner can trace a path instead of memorizing isolated moves.",
-      c2b:"The end-to-end suite for FLUXO, written as a working study of the practice: locator strategy, assertion depth, and what actually causes flakiness in a real UI.",
-      c3b:"An internal web app for my team at BMM Test Labs — built because the tracking we needed didn't exist in the tools we had.",
-      c4b:"A browser-based basketball management game with a full production stack — simulation logic, persistent state, and enough moving parts to be worth testing properly.",
-      seeProject:"View project →", readTests:"Read the tests →",
-      dStack:"Stack", dRole:"Role", dCovers:"Covers", dUsers:"Users",
-      c1role:"Design, build, deploy", c2covers:"UI flows, navigation, state",
-      c3stack:"Web app · internal", c3users:"SQA team, daily",
-      c4stack:"Web · game simulation", c4role:"Solo build",
-      tLabel:"Toolbox", tTitle:"What I reach for.",
-      tTesting:"Testing", tEng:"Engineering", tLang:"Languages",
-      tk1:"Manual & exploratory testing", tk2:"Test case design", tk3:"SAS protocol validation", tk4:"Regression & compliance suites", tk5:"JIRA · internal tooling",
-      lg1:"Portuguese <span>native</span>", lg2:"English <span>fluent</span>", lg3:"Spanish <span>basic</span>", lg4:"French <span>basic</span>",
-      sLabel:"Sign-off", sTitle:"Hiring for QA or automation?",
-      sBody:"I'm looking for QA Automation and SDET roles — open to relocation, and used to working across time zones and languages. Happy to walk through how I'd approach testing your product.",
-      kEmail:"Email", kResume:"Résumé", kResumeLink:"Download PDF",
-      stampBig:"PASS", stampName:"NAME — HERBERT P.", stampRole:"ROLE — QA / TEST AUTOMATION",
-      stampBase:"BASE — MONCTON, CANADA", stampStatus:"STATUS — OPEN TO RELOCATION", stampVerified:"VERIFIED —",
-      footNote:"This page is built, tested with Playwright, and deployed by a pipeline.", footLink:"See the workflow →"
+      title:"Herbert Parasio · SQA Team Lead",
+      desc:"SQA Team Lead at BMM Testlabs. My team verifies casino and slot games against the math model and the rules of 10 jurisdictions. Story, evidence, and the Unflaky video.",
+      langLabel:"Language",
+      progressLabel:"Test run progress",
+      hudName:"HERBERT PARASIO · SQA TEAM LEAD",
+      navStory:"Story", navMethod:"Method", navEvidence:"Evidence",
+      navVideo:"Video", navNext:"Next", navSignoff:"Sign-off",
+      heroLabel:"HERBERT PARASIO · SQA TEAM LEAD",
+      heroSub:"herbert.spec.ts · TEST RUN IN PROGRESS",
+      h1:"Every release tells a story. I make sure it ends in a pass, not a post-mortem.",
+      lede:"I'm Herbert Parasio, SQA Team Lead at BMM Testlabs in Dieppe, Canada. My team verifies casino and slot games against the math model and the rules of 10 jurisdictions, before Compliance decides whether they can go to market. This page is the run. Scroll, and each chapter passes.",
+      cue:"SCROLL TO RUN THE SUITE · 7 TESTS",
+      specRun:"TEST RUN",
+      t1:"Reads data before it judges · 2014 · Infoglobo / Grupo Globo",
+      t2:"Builds software before it tests it · 2017 · Full-stack developer",
+      t3:"Crosses an ocean and starts over · 2022 · NBCC Moncton, Canada",
+      t4:"Learns to break it properly · 2024 · BMM, intern to QA Engineer",
+      t5:"Verifies what regulators sign off on · 2026 · SQA Team Lead, 11 testers",
+      t6:"Certified, not just experienced · ISTQB CTFL, 2026",
+      t7:"Teaches the next QAs to think · Next chapter, Unflaky",
+      statusRunning:"RUNNING",
+      statusPassing:"ALL PASSING",
+      storyKicker:"THE STORY · FIVE CHAPTERS, ONE THREAD",
+      storyH2:"Most testers learn to test. I learned everything around the test first.",
+      storyBody:"Data taught me patterns. Code taught me where things hide. A new country taught me to start from zero. Put together, that is why I find the one bug that matters, not the thirty that don't.",
+      c1k:"CHAPTER 01 · 2014 · THE PATTERN EYE",
+      c1h:"Before I tested software, I read numbers for a living.",
+      c1b:"I started as a junior data analyst at Infoglobo, Grupo Globo, then moved to the Lojas Americanas group. Two years of dashboards and anomalies teaches you something no test course does: systems confess in their data first. The failure is usually visible in the numbers long before anyone files a bug.",
+      c1lk:"SKILL ACQUIRED:", c1lv:"Reading evidence before forming an opinion",
+      c2k:"CHAPTER 02 · 2017 · THE BUILDER YEARS",
+      c2h:"Then I spent four years on the other side of the bug report.",
+      c2b:"As a full-stack developer at Brasil Center, I shipped Java, Spring Boot, React and Vue in production. I wrote the race conditions, the null pointers, the \"works on my machine\" deploys. So today, when I test, I'm not guessing where software breaks. I've lived there.",
+      c2lk:"SKILL ACQUIRED:", c2lv:"Knowing where developers hide the bodies",
+      c3k:"CHAPTER 03 · 2022 · THE RESTART",
+      c3h:"New country, new language at work, back to the classroom.",
+      c3b:"I moved to Canada and studied IT Software Development at NBCC Moncton, graduating in 2024. Starting over in your thirties, in a second language, does one useful thing to a tester: it kills the fear of the unknown system. Every codebase is just another country. You learn its rules, then you test whether it follows them.",
+      c3lk:"SKILL ACQUIRED:", c3lv:"Walking into any system like I belong there",
+      c4k:"CHAPTER 04 · 2024 · BREAKING IT PROPERLY",
+      c4h:"An internship at BMM turned into the craft.",
+      c4b:"I joined BMM Testlabs as an intern in April 2024 and was a QA Engineer by June. There I learned regulated testing: verify paytables, RTP and payouts against the math model, jurisdiction by jurisdiction. I automated with Playwright and Postman in CI and built an AI-assisted knowledge base to speed up root-cause analysis and catch duplicate defects before they wasted anyone's time.",
+      c4lk:"RESULT:", c4lv:"Promoted twice in two years",
+      c5k:"CHAPTER 05 · 2026 · THE VERIFICATION DESK",
+      c5h:"Now I lead the team that verifies what regulators will sign.",
+      c5b:"Since May 2026 I lead 11 testers as SQA Team Lead. We verify around 15 casino games a month against the regulations of 10 jurisdictions, and when we find a problem, we send it back to the studio and work with them until it's right. That partnership loop, verify, report, re-verify, is the job. In 2026 I also passed the ISTQB CTFL, after two weeks of study. Next up: the CTAL Test Manager, coming soon.",
+      c5lk:"LAST 6 MONTHS:", c5lv:"95% first-pass compliance · 98% on-time delivery",
+      mKicker:"HOW I WORK",
+      mH2:"A bug is a story with a missing chapter. My job is to find which one.",
+      mLead:"Four moves, in order, on every game and every system. The order matters more than the tools.",
+      s1n:"STEP 01", s1t:"Read the rules first.", s1b:"The math model and the jurisdiction's regulation are the spec. If it isn't written there, it isn't a defect yet, it's a question.",
+      s2n:"STEP 02", s2t:"Follow the money.", s2b:"Paytables, RTP, payouts. In regulated gaming, the defect that matters is the one that pays wrong. Test the happy path last.",
+      s3n:"STEP 03", s3t:"Automate the repeatable.", s3b:"Playwright and Postman suites in CI run the checks humans get bored with, so humans can spend their attention on judgement.",
+      s4n:"STEP 04", s4t:"Report so it gets fixed.", s4b:"Root cause, evidence, duplicate check against the knowledge base. A report a developer can act on in one read is a defect half-fixed.",
+      calloutK:"IMPORTANT DISTINCTION.",
+      calloutB:"My team verifies. Compliance certifies. We don't approve or reject games for market, and we don't pretend to. We verify them against the rules and hand Compliance a result they can trust. Getting that boundary right is most of leadership in a regulated lab.",
+      evH2:"Don't take my word for it. Take the numbers.",
+      m1l:"TESTERS LED AT BMM TESTLABS",
+      m2l:"JURISDICTIONS VERIFIED AGAINST",
+      m3l:"CASINO GAMES VERIFIED PER MONTH",
+      m4l:"FIRST-PASS COMPLIANCE, LAST 6 MONTHS",
+      m5l:"ON-TIME DELIVERY, LAST 6 MONTHS",
+      ev1l:"AUTOMATION", ev1h:"Suites that run while I sleep.",
+      ev1b:"Playwright and Postman checks wired into CI during my QA Engineer years, covering the repetitive verification so the team's eyes stay on edge cases and judgement calls.",
+      ev2l:"KNOWLEDGE", ev2h:"An AI-assisted defect memory.",
+      ev2b:"A knowledge base that speeds up root-cause analysis and flags duplicate defects early, so studios don't get the same finding twice and testers don't re-investigate solved problems.",
+      ev3l:"CERTIFICATION", ev3h:"ISTQB CTFL, certified 2026.",
+      ev3b:"Passed after two weeks of study using a method I built for dry syllabi. CTAL Test Manager: coming soon, exam planned for 2027.",
+      tbKicker:"TOOLBOX · WHAT'S ACTUALLY ON THE DESK",
+      tb1:"Playwright", tb2:"Postman", tb3:"Java", tb4:"Spring Boot", tb5:"React", tb6:"Vue",
+      tb7:"CI Pipelines", tb8:"Test Design (Copeland)", tb9:"RTP / Paytable Verification",
+      tb10:"Root-Cause Analysis", tb11:"AI-Assisted QA", tb12:"Team Leadership",
+      shKicker:"FEATURED BUILD · WATCH THIS FIRST · ★ THE HIRE-ME PIECE",
+      shH2:"Don't just read that I test. Watch the tool I built do it.",
+      shLead:"This is Unflaky, the QA tool I created. In the video I walk through what it does, how it thinks, and why I built it. If you watch one thing on this page, watch this. It's the clearest proof of how I work: I don't just find bugs, I build the system that finds them.",
+      facadeTop:"unflaky · tool walkthrough",
+      facadeBottom:"@UNFLAKY · YOUTUBE",
+      playerCaption:"unflaky · tool walkthrough · @UNFLAKY · YOUTUBE",
+      playerDesc:"Unflaky in action: a QA team in a tool. See it read a product, create the tests, run them, and turn the result into a report a client can act on.",
+      agentsLabel:"6 AGENTS:",
+      b1n:"01. PLANS", b1h:"Reads the product first.",
+      b1b:"It analyses the repo and the product, then writes the test plan and test cases, using proven test-design techniques, not guesswork.",
+      b2n:"02. CREATES & RUNS", b2h:"Creates and runs the tests.",
+      b2b:"Functional, automation, API, regression and mobile/UI checks, the work of a full QA team, run by specialised agents.",
+      b3n:"03. REPORTS", b3h:"Delivers a report you can hire on.",
+      b3b:"The output is a clear, client-ready test report. It opens issues with evidence, and never quietly fixes code, testing stays honest and independent.",
+      shQuote:"\"This guy doesn't just test software. He had an idea for how testing should work, and he built it.\" That's the reaction this video is here to create, and it's why founders hire me to test SaaS, especially AI-built SaaS, before it breaks in production.",
+      shCta:"Watch the video on YouTube (@unflaky)",
+      nxKicker:"THE NEXT CHAPTER · WRITING ITSELF NOW",
+      nxH2:"The run doesn't end at my desk. Next, I teach QAs to think, not just to click.",
+      nxBody:"A junior once found 30 bugs in a day. I found 1, and mine was the only one that mattered. That gap isn't talent, it's thinking, and thinking can be taught. That's what I'm building next.",
+      x1w:"2027", x1h:"Unflaky, Quality Lab.",
+      x1b:"A QA company focused on testing SaaS, especially AI-built SaaS, before it breaks in production.",
+      x2w:"WEEKLY", x2h:"@unflaky on YouTube.",
+      x2b:"QA in practice, leadership and automation, in Portuguese, for QAs who want to become senior, lead and freelance.",
+      x3w:"COMING SOON", x3h:"CTAL Test Manager.",
+      x3b:"Incoming: the next certification after the CTFL, exam planned for 2027.",
+      stamp:"✓ PASS",
+      soH2:"Run complete. Let's verify yours before your users do.",
+      soBody:"If you're shipping software that has to be right, a game, a SaaS, an AI-built product one bad release away from losing its users, this is the conversation I have every day. Start it here.",
+      lkIn:"/IN/HERBERT-CUNHA", lkGh:"@HERBERTPH", lkYt:"@UNFLAKY", lkX:"X @HERBERTBUILDS",
+      foot:"HERBERT PARASIO · SQA TEAM LEAD · DIEPPE, CANADA · EN PT ES FR · THE RUN ABOVE IS THE REAL TIMELINE, 2014–2026"
     },
     pt:{
-      title:"Herbert P. — Engenheiro de QA",
-      desc:"Líder de equipe de QA certificando software de cassino e slots em múltiplas jurisdições. Design de testes, protocolo SAS, automação com Playwright.",
-      locale:"pt-BR",
-      status:"Aberto a realocação",
-      eyebrow:"Moncton, Canadá · Jogos e software regulado",
-      h1:"Eu testo o software que o regulador precisa aprovar.",
-      lede:"Líder de equipe de QA em um laboratório de certificação de jogos, onde um defeito que passa significa uma submissão rejeitada em uma jurisdição inteira. <strong>Agora aplicando esse mesmo rigor em suítes automatizadas com Playwright.</strong>",
-      runWho:"Execução de testes",
-      r1:"lidera uma equipe de QA de software na BMM Test Labs",
-      r2:"certifica jogos de slot e cassino em múltiplas jurisdições",
-      r3:"lê e valida tráfego do protocolo SAS",
-      r4:"constrói ferramentas internas que a equipe de QA usa todo dia",
-      r5:"escreve suítes Playwright contra aplicações reais",
-      r6:"trabalha em inglês, português, espanhol e francês",
-      r7:"certificação ISTQB Foundation Level",
-      pending:"agendada", flaky:"0 instáveis", summary:"{p} passaram · {s} agendado",
-      pLabel:"Como eu trabalho", pTitle:"Compliance me ensinou a escrever testes que se sustentam.",
-      p1h:"Design de testes", p1b:"Os requisitos chegam como regras regulatórias, não como user stories. Eu os transformo em cobertura auditável por terceiros — casos rastreáveis, passos reproduzíveis e evidência anexada a cada resultado.",
-      p2h:"Automação", p2b:"Suítes Playwright feitas para estabilidade primeiro: locators resilientes, esperas explícitas no lugar de sleeps, e uma regra dura — teste instável se conserta ou se apaga, nunca se re-executa até ficar verde.",
-      p3h:"Entrega", p3b:"Pipelines que constroem a aplicação, sobem uma cópia efêmera, rodam a suíte contra aquele build e só então publicam. Produção nunca é o alvo do teste.",
-      p4h:"Time", p4b:"Liderar QA é fazer triagem de defeitos em que os devs confiam: severidade que corresponde ao impacto real, relatórios escritos para que a correção seja óbvia, e processo que sobrevive às semanas corridas.",
-      eLabel:"Evidências", eTitle:"Coisas que eu construí — e depois testei.",
-      v1:"No ar", v2:"Suíte passando", v3:"Em uso", v4:"Em andamento",
-      c1b:"Um web app que mapeia posições de jiu-jitsu e as transições entre elas, para que o praticante consiga traçar um caminho em vez de decorar movimentos isolados.",
-      c2b:"A suíte end-to-end do FLUXO, escrita como um estudo prático: estratégia de locators, profundidade das asserções e o que realmente causa flakiness numa UI real.",
-      c3b:"Um web app interno para o meu time na BMM Test Labs — construído porque o acompanhamento que precisávamos não existia nas ferramentas que tínhamos.",
-      c4b:"Um jogo de gestão de basquete no navegador com stack de produção completa — lógica de simulação, estado persistente e peças em movimento suficientes para valer um teste sério.",
-      seeProject:"Ver projeto →", readTests:"Ler os testes →",
-      dStack:"Stack", dRole:"Papel", dCovers:"Cobre", dUsers:"Usuários",
-      c1role:"Design, build e deploy", c2covers:"Fluxos de UI, navegação, estado",
-      c3stack:"Web app · interno", c3users:"Equipe de SQA, diariamente",
-      c4stack:"Web · simulação de jogo", c4role:"Construção solo",
-      tLabel:"Ferramentas", tTitle:"O que eu uso.",
-      tTesting:"Testes", tEng:"Engenharia", tLang:"Idiomas",
-      tk1:"Testes manuais e exploratórios", tk2:"Design de casos de teste", tk3:"Validação do protocolo SAS", tk4:"Suítes de regressão e compliance", tk5:"JIRA · ferramentas internas",
-      lg1:"Português <span>nativo</span>", lg2:"Inglês <span>fluente</span>", lg3:"Espanhol <span>básico</span>", lg4:"Francês <span>básico</span>",
-      sLabel:"Assinatura", sTitle:"Contratando para QA ou automação?",
-      sBody:"Estou procurando posições de QA Automation e SDET — aberto a realocação e acostumado a trabalhar entre fusos e idiomas. Fico feliz em explicar como eu abordaria os testes do seu produto.",
-      kEmail:"E-mail", kResume:"Currículo", kResumeLink:"Baixar PDF",
-      stampBig:"APROVADO", stampName:"NOME — HERBERT P.", stampRole:"FUNÇÃO — QA / AUTOMAÇÃO DE TESTES",
-      stampBase:"BASE — MONCTON, CANADÁ", stampStatus:"STATUS — ABERTO A REALOCAÇÃO", stampVerified:"VERIFICADO —",
-      footNote:"Esta página é construída, testada com Playwright e publicada por um pipeline.", footLink:"Ver o workflow →"
+      title:"Herbert Parasio · Líder de Equipe SQA",
+      desc:"Líder de Equipe SQA na BMM Testlabs. Meu time verifica jogos de cassino e slot contra o modelo matemático e as regras de 10 jurisdições. Trajetória, evidências e o vídeo da Unflaky.",
+      langLabel:"Idioma",
+      progressLabel:"Progresso da execução de testes",
+      hudName:"HERBERT PARASIO · LÍDER DE EQUIPE SQA",
+      navStory:"História", navMethod:"Método", navEvidence:"Evidências",
+      navVideo:"Vídeo", navNext:"Próximo", navSignoff:"Fechamento",
+      heroLabel:"HERBERT PARASIO · LÍDER DE EQUIPE SQA",
+      heroSub:"herbert.spec.ts · EXECUÇÃO DE TESTES EM ANDAMENTO",
+      h1:"Toda release conta uma história. Eu garanto que ela termine em aprovação, não em post-mortem.",
+      lede:"Sou Herbert Parasio, Líder de Equipe SQA na BMM Testlabs em Dieppe, Canadá. Meu time verifica jogos de cassino e slot contra o modelo matemático e as regras de 10 jurisdições, antes de o Compliance decidir se podem ir ao mercado. Esta página é a execução. Role, e cada capítulo passa.",
+      cue:"ROLE PARA EXECUTAR A SUÍTE · 7 TESTES",
+      specRun:"EXECUÇÃO DE TESTES",
+      t1:"Lê os dados antes de julgar · 2014 · Infoglobo / Grupo Globo",
+      t2:"Constrói software antes de testá-lo · 2017 · Desenvolvedor full-stack",
+      t3:"Atravessa um oceano e recomeça · 2022 · NBCC Moncton, Canadá",
+      t4:"Aprende a quebrar direito · 2024 · BMM, de estagiário a QA Engineer",
+      t5:"Verifica o que os reguladores assinam · 2026 · Líder de Equipe SQA, 11 testadores",
+      t6:"Certificado, não apenas experiente · ISTQB CTFL, 2026",
+      t7:"Ensina os próximos QAs a pensar · Próximo capítulo, Unflaky",
+      statusRunning:"EXECUTANDO",
+      statusPassing:"TUDO PASSANDO",
+      storyKicker:"A HISTÓRIA · CINCO CAPÍTULOS, UM FIO",
+      storyH2:"A maioria dos testadores aprende a testar. Eu aprendi primeiro tudo o que envolve o teste.",
+      storyBody:"Dados me ensinaram padrões. Código me ensinou onde as coisas se escondem. Um novo país me ensinou a começar do zero. Juntos, é por isso que eu encontro o bug que importa, e não os trinta que não importam.",
+      c1k:"CAPÍTULO 01 · 2014 · O OLHO DO PADRÃO",
+      c1h:"Antes de testar software, eu lia números para viver.",
+      c1b:"Comecei como analista de dados júnior na Infoglobo, Grupo Globo, e depois fui para o grupo Lojas Americanas. Dois anos de dashboards e anomalias ensinam algo que nenhum curso de teste ensina: os sistemas confessam primeiro nos dados. A falha costuma estar visível nos números muito antes de alguém abrir um bug.",
+      c1lk:"HABILIDADE ADQUIRIDA:", c1lv:"Ler evidência antes de formar opinião",
+      c2k:"CAPÍTULO 02 · 2017 · OS ANOS DE CONSTRUTOR",
+      c2h:"Depois passei quatro anos do outro lado do bug report.",
+      c2b:"Como desenvolvedor full-stack na Brasil Center, coloquei Java, Spring Boot, React e Vue em produção. Eu escrevi as race conditions, os null pointers, os deploys de \"funciona na minha máquina\". Então hoje, quando testo, não fico adivinhando onde o software quebra. Eu já morei lá.",
+      c2lk:"HABILIDADE ADQUIRIDA:", c2lv:"Saber onde os desenvolvedores escondem os corpos",
+      c3k:"CAPÍTULO 03 · 2022 · O RECOMEÇO",
+      c3h:"Novo país, nova língua no trabalho, de volta à sala de aula.",
+      c3b:"Mudei para o Canadá e estudei IT Software Development no NBCC Moncton, formando em 2024. Recomeçar aos trinta e poucos, em uma segunda língua, faz uma coisa útil para um testador: mata o medo do sistema desconhecido. Todo código é só outro país. Você aprende as regras e depois testa se ele as segue.",
+      c3lk:"HABILIDADE ADQUIRIDA:", c3lv:"Entrar em qualquer sistema como se fosse o meu lugar",
+      c4k:"CAPÍTULO 04 · 2024 · QUEBRANDO DIREITO",
+      c4h:"Um estágio na BMM virou o ofício.",
+      c4b:"Entrei na BMM Testlabs como estagiário em abril de 2024 e era QA Engineer em junho. Ali aprendi teste regulado: verificar paytables, RTP e pagamentos contra o modelo matemático, jurisdição por jurisdição. Automatizei com Playwright e Postman em CI e construí uma base de conhecimento assistida por IA para acelerar a análise de causa raiz e pegar defeitos duplicados antes que consumissem o tempo de alguém.",
+      c4lk:"RESULTADO:", c4lv:"Duas promoções em dois anos",
+      c5k:"CAPÍTULO 05 · 2026 · A MESA DE VERIFICAÇÃO",
+      c5h:"Agora eu lidero o time que verifica o que os reguladores vão assinar.",
+      c5b:"Desde maio de 2026 lidero 11 testadores como Líder de Equipe SQA. Verificamos cerca de 15 jogos de cassino por mês contra as regras de 10 jurisdições e, quando encontramos um problema, devolvemos ao estúdio e trabalhamos com ele até ficar certo. Esse ciclo de parceria, verificar, reportar, verificar de novo, é o trabalho. Em 2026 também passei o ISTQB CTFL, depois de duas semanas de estudo. A seguir: o CTAL Test Manager, em breve.",
+      c5lk:"ÚLTIMOS 6 MESES:", c5lv:"95% de conformidade na primeira passagem · 98% de entregas no prazo",
+      mKicker:"COMO EU TRABALHO",
+      mH2:"Um bug é uma história com um capítulo faltando. Meu trabalho é descobrir qual.",
+      mLead:"Quatro movimentos, em ordem, em cada jogo e cada sistema. A ordem importa mais que as ferramentas.",
+      s1n:"PASSO 01", s1t:"Leia as regras primeiro.", s1b:"O modelo matemático e a regulação da jurisdição são a especificação. Se não está escrito ali, ainda não é um defeito, é uma pergunta.",
+      s2n:"PASSO 02", s2t:"Siga o dinheiro.", s2b:"Paytables, RTP, pagamentos. Em jogos regulados, o defeito que importa é o que paga errado. Teste o caminho feliz por último.",
+      s3n:"PASSO 03", s3t:"Automatize o repetível.", s3b:"Suítes Playwright e Postman em CI rodam as checagens que entediam humanos, para que humanos gastem a atenção com julgamento.",
+      s4n:"PASSO 04", s4t:"Reporte para que seja corrigido.", s4b:"Causa raiz, evidência, checagem de duplicidade contra a base de conhecimento. Um relatório que o desenvolvedor consegue agir depois de uma leitura é um defeito meio corrigido.",
+      calloutK:"DISTINÇÃO IMPORTANTE.",
+      calloutB:"Meu time verifica. O Compliance certifica. Não aprovamos nem rejeitamos jogos para o mercado, e não fingimos que sim. Verificamos contra as regras e entregamos ao Compliance um resultado em que ele pode confiar. Acertar essa fronteira é boa parte da liderança em um laboratório regulado.",
+      evH2:"Não acredite na minha palavra. Acredite nos números.",
+      m1l:"TESTADORES LIDERADOS NA BMM TESTLABS",
+      m2l:"JURISDIÇÕES VERIFICADAS",
+      m3l:"JOGOS DE CASSINO VERIFICADOS POR MÊS",
+      m4l:"CONFORMIDADE NA PRIMEIRA PASSAGEM, ÚLTIMOS 6 MESES",
+      m5l:"ENTREGAS NO PRAZO, ÚLTIMOS 6 MESES",
+      ev1l:"AUTOMAÇÃO", ev1h:"Suítes que rodam enquanto eu durmo.",
+      ev1b:"Checagens Playwright e Postman ligadas ao CI nos meus anos de QA Engineer, cobrindo a verificação repetitiva para que os olhos do time fiquem nos casos de borda e nas decisões de julgamento.",
+      ev2l:"CONHECIMENTO", ev2h:"Uma memória de defeitos assistida por IA.",
+      ev2b:"Uma base de conhecimento que acelera a análise de causa raiz e sinaliza defeitos duplicados cedo, para que estúdios não recebam o mesmo achado duas vezes e testadores não reinvestiguem problemas resolvidos.",
+      ev3l:"CERTIFICAÇÃO", ev3h:"ISTQB CTFL, certificado em 2026.",
+      ev3b:"Passei depois de duas semanas de estudo usando um método que criei para programas densos. CTAL Test Manager: em breve, exame planejado para 2027.",
+      tbKicker:"FERRAMENTAS · O QUE ESTÁ DE FATO NA MESA",
+      tb1:"Playwright", tb2:"Postman", tb3:"Java", tb4:"Spring Boot", tb5:"React", tb6:"Vue",
+      tb7:"Pipelines de CI", tb8:"Design de Testes (Copeland)", tb9:"Verificação de RTP / Paytable",
+      tb10:"Análise de Causa Raiz", tb11:"QA Assistida por IA", tb12:"Liderança de Time",
+      shKicker:"PROJETO EM DESTAQUE · ASSISTA PRIMEIRO · ★ A PEÇA QUE ME CONTRATA",
+      shH2:"Não leia só que eu testo. Assista à ferramenta que eu construí fazer isso.",
+      shLead:"Este é o Unflaky, a ferramenta de QA que eu criei. No vídeo eu mostro o que ela faz, como ela pensa e por que eu a construí. Se você for assistir a uma coisa nesta página, assista a esta. É a prova mais clara de como eu trabalho: eu não só encontro bugs, eu construo o sistema que os encontra.",
+      facadeTop:"unflaky · tour pela ferramenta",
+      facadeBottom:"@UNFLAKY · YOUTUBE",
+      playerCaption:"unflaky · tour pela ferramenta · @UNFLAKY · YOUTUBE",
+      playerDesc:"Unflaky em ação: um time de QA dentro de uma ferramenta. Veja ela ler um produto, criar os testes, executá-los e transformar o resultado em um relatório com o qual o cliente pode agir.",
+      agentsLabel:"6 AGENTES:",
+      b1n:"01. PLANEJA", b1h:"Lê o produto primeiro.",
+      b1b:"Analisa o repositório e o produto e então escreve o plano e os casos de teste, usando técnicas de design de teste comprovadas, não achismo.",
+      b2n:"02. CRIA E EXECUTA", b2h:"Cria e executa os testes.",
+      b2b:"Checagens funcionais, de automação, de API, de regressão e de mobile/UI, o trabalho de um time de QA completo, executado por agentes especializados.",
+      b3n:"03. REPORTA", b3h:"Entrega um relatório que dá para contratar.",
+      b3b:"A saída é um relatório de teste claro e pronto para o cliente. Ele abre issues com evidência e nunca corrige código em silêncio, o teste continua honesto e independente.",
+      shQuote:"\"Esse cara não só testa software. Ele teve uma ideia de como o teste deveria funcionar e construiu.\" Essa é a reação que este vídeo existe para criar, e é por isso que fundadores me contratam para testar SaaS, especialmente SaaS feito com IA, antes de quebrar em produção.",
+      shCta:"Assista ao vídeo no YouTube (@unflaky)",
+      nxKicker:"O PRÓXIMO CAPÍTULO · SENDO ESCRITO AGORA",
+      nxH2:"A execução não termina na minha mesa. A seguir, eu ensino QAs a pensar, não apenas a clicar.",
+      nxBody:"Um júnior uma vez encontrou 30 bugs em um dia. Eu encontrei 1, e o meu era o único que importava. Essa diferença não é talento, é pensamento, e pensamento se ensina. É isso que estou construindo a seguir.",
+      x1w:"2027", x1h:"Unflaky, Quality Lab.",
+      x1b:"Uma empresa de QA focada em testar SaaS, especialmente SaaS feito com IA, antes de quebrar em produção.",
+      x2w:"SEMANAL", x2h:"@unflaky no YouTube.",
+      x2b:"QA na prática, liderança e automação, em português, para QAs que querem se tornar sêniores, líderes e freelancers.",
+      x3w:"EM BREVE", x3h:"CTAL Test Manager.",
+      x3b:"Próximo passo: a certificação seguinte ao CTFL, exame planejado para 2027.",
+      stamp:"✓ PASS",
+      soH2:"Execução completa. Vamos verificar a sua antes dos seus usuários.",
+      soBody:"Se você entrega software que precisa estar certo, um jogo, um SaaS, um produto feito com IA a uma release ruim de perder seus usuários, esta é a conversa que eu tenho todos os dias. Comece por aqui.",
+      lkIn:"/IN/HERBERT-CUNHA", lkGh:"@HERBERTPH", lkYt:"@UNFLAKY", lkX:"X @HERBERTBUILDS",
+      foot:"HERBERT PARASIO · LÍDER DE EQUIPE SQA · DIEPPE, CANADÁ · EN PT ES FR · A EXECUÇÃO ACIMA É A LINHA DO TEMPO REAL, 2014–2026"
     },
     es:{
-      title:"Herbert P. — Ingeniero de QA",
-      desc:"Líder de equipo de QA que certifica software de casino y slots en múltiples jurisdicciones. Diseño de pruebas, protocolo SAS, automatización con Playwright.",
-      locale:"es-ES",
-      status:"Abierto a reubicación",
-      eyebrow:"Moncton, Canadá · Juegos y software regulado",
-      h1:"Pruebo el software que el regulador tiene que aprobar.",
-      lede:"Líder de equipo de QA en un laboratorio de certificación de juegos, donde un defecto que se escapa significa una presentación rechazada en toda una jurisdicción. <strong>Ahora aplico ese mismo rigor en suites automatizadas con Playwright.</strong>",
-      runWho:"Ejecución de pruebas",
-      r1:"lidera un equipo de QA de software en BMM Test Labs",
-      r2:"certifica juegos de slot y casino en múltiples jurisdicciones",
-      r3:"lee y valida tráfico del protocolo SAS",
-      r4:"construye herramientas internas que el equipo de QA usa a diario",
-      r5:"escribe suites de Playwright contra aplicaciones reales",
-      r6:"trabaja en inglés, portugués, español y francés",
-      r7:"certificación ISTQB Foundation Level",
-      pending:"programada", flaky:"0 inestables", summary:"{p} aprobadas · {s} programada",
-      pLabel:"Cómo trabajo", pTitle:"El compliance me enseñó a escribir pruebas que aguantan.",
-      p1h:"Diseño de pruebas", p1b:"Los requisitos llegan como normas regulatorias, no como historias de usuario. Los convierto en cobertura que un tercero puede auditar: casos trazables, pasos reproducibles y evidencia adjunta a cada resultado.",
-      p2h:"Automatización", p2b:"Suites de Playwright pensadas primero para la estabilidad: locators resistentes, esperas explícitas en lugar de sleeps y una regla dura — una prueba inestable se arregla o se borra, nunca se repite hasta que salga verde.",
-      p3h:"Entrega", p3b:"Pipelines que compilan la aplicación, la sirven en un entorno efímero, ejecutan la suite contra ese build y solo entonces publican. Producción nunca es el objetivo de las pruebas.",
-      p4h:"Equipo", p4b:"Liderar QA es hacer un triaje de defectos en el que los desarrolladores confían: severidad acorde al impacto real, informes escritos para que la corrección sea obvia y procesos que sobreviven a las semanas cargadas.",
-      eLabel:"Evidencia", eTitle:"Cosas que construí y luego probé.",
-      v1:"En línea", v2:"Suite en verde", v3:"En uso", v4:"En curso",
-      c1b:"Una aplicación web que mapea posiciones de jiu-jitsu y las transiciones entre ellas, para que el practicante pueda trazar un camino en vez de memorizar movimientos sueltos.",
-      c2b:"La suite end-to-end de FLUXO, escrita como un estudio práctico: estrategia de locators, profundidad de las aserciones y qué provoca realmente el flakiness en una UI real.",
-      c3b:"Una aplicación web interna para mi equipo en BMM Test Labs, construida porque el seguimiento que necesitábamos no existía en las herramientas que teníamos.",
-      c4b:"Un juego de gestión de baloncesto en el navegador con un stack de producción completo: lógica de simulación, estado persistente y suficientes piezas en movimiento como para merecer pruebas de verdad.",
-      seeProject:"Ver proyecto →", readTests:"Leer las pruebas →",
-      dStack:"Stack", dRole:"Rol", dCovers:"Cubre", dUsers:"Usuarios",
-      c1role:"Diseño, desarrollo y despliegue", c2covers:"Flujos de UI, navegación, estado",
-      c3stack:"Aplicación web · interna", c3users:"Equipo de SQA, a diario",
-      c4stack:"Web · simulación", c4role:"Proyecto en solitario",
-      tLabel:"Herramientas", tTitle:"Lo que uso.",
-      tTesting:"Pruebas", tEng:"Ingeniería", tLang:"Idiomas",
-      tk1:"Pruebas manuales y exploratorias", tk2:"Diseño de casos de prueba", tk3:"Validación del protocolo SAS", tk4:"Suites de regresión y compliance", tk5:"JIRA · herramientas internas",
-      lg1:"Portugués <span>nativo</span>", lg2:"Inglés <span>fluido</span>", lg3:"Español <span>básico</span>", lg4:"Francés <span>básico</span>",
-      sLabel:"Firma", sTitle:"¿Contratando para QA o automatización?",
-      sBody:"Busco puestos de QA Automation y SDET, abierto a reubicación y acostumbrado a trabajar entre husos horarios e idiomas. Encantado de explicar cómo enfocaría las pruebas de tu producto.",
-      kEmail:"Correo", kResume:"Currículum", kResumeLink:"Descargar PDF",
-      stampBig:"APROBADO", stampName:"NOMBRE — HERBERT P.", stampRole:"PUESTO — QA / AUTOMATIZACIÓN DE PRUEBAS",
-      stampBase:"BASE — MONCTON, CANADÁ", stampStatus:"ESTADO — ABIERTO A REUBICACIÓN", stampVerified:"VERIFICADO —",
-      footNote:"Esta página se construye, se prueba con Playwright y se publica mediante un pipeline.", footLink:"Ver el workflow →"
+      title:"Herbert Parasio · Líder de Equipo SQA",
+      desc:"Líder de Equipo SQA en BMM Testlabs. Mi equipo verifica juegos de casino y slot contra el modelo matemático y las reglas de 10 jurisdicciones. Trayectoria, evidencia y el video de Unflaky.",
+      langLabel:"Idioma",
+      progressLabel:"Progreso de la ejecución de pruebas",
+      hudName:"HERBERT PARASIO · LÍDER DE EQUIPO SQA",
+      navStory:"Historia", navMethod:"Método", navEvidence:"Evidencia",
+      navVideo:"Vídeo", navNext:"Siguiente", navSignoff:"Cierre",
+      heroLabel:"HERBERT PARASIO · LÍDER DE EQUIPO SQA",
+      heroSub:"herbert.spec.ts · EJECUCIÓN DE PRUEBAS EN CURSO",
+      h1:"Cada release cuenta una historia. Yo me aseguro de que termine en aprobación y no en post-mortem.",
+      lede:"Soy Herbert Parasio, Líder de Equipo SQA en BMM Testlabs en Dieppe, Canadá. Mi equipo verifica juegos de casino y slot contra el modelo matemático y las reglas de 10 jurisdicciones, antes de que Compliance decida si pueden salir al mercado. Esta página es la ejecución. Desplázate y cada capítulo aprueba.",
+      cue:"DESPLÁZATE PARA EJECUTAR LA SUITE · 7 PRUEBAS",
+      specRun:"EJECUCIÓN DE PRUEBAS",
+      t1:"Lee los datos antes de juzgar · 2014 · Infoglobo / Grupo Globo",
+      t2:"Construye software antes de probarlo · 2017 · Desarrollador full-stack",
+      t3:"Cruza un océano y empieza de nuevo · 2022 · NBCC Moncton, Canadá",
+      t4:"Aprende a romperlo como se debe · 2024 · BMM, de pasante a QA Engineer",
+      t5:"Verifica lo que los reguladores firman · 2026 · Líder de Equipo SQA, 11 testers",
+      t6:"Certificado, no solo experimentado · ISTQB CTFL, 2026",
+      t7:"Enseña a pensar a los próximos QA · Siguiente capítulo, Unflaky",
+      statusRunning:"EJECUTANDO",
+      statusPassing:"TODO APROBADO",
+      storyKicker:"LA HISTORIA · CINCO CAPÍTULOS, UN HILO",
+      storyH2:"La mayoría de los testers aprende a probar. Yo aprendí primero todo lo que rodea la prueba.",
+      storyBody:"Los datos me enseñaron patrones. El código me enseñó dónde se esconden las cosas. Un país nuevo me enseñó a empezar de cero. Juntas, esas cosas explican por qué encuentro el bug que importa y no los treinta que no.",
+      c1k:"CAPÍTULO 01 · 2014 · EL OJO DEL PATRÓN",
+      c1h:"Antes de probar software, yo leía números para vivir.",
+      c1b:"Empecé como analista de datos junior en Infoglobo, Grupo Globo, y luego pasé al grupo Lojas Americanas. Dos años de dashboards y anomalías enseñan algo que ningún curso de pruebas enseña: los sistemas confiesan primero en sus datos. El fallo suele verse en los números mucho antes de que alguien abra un bug.",
+      c1lk:"HABILIDAD ADQUIRIDA:", c1lv:"Leer evidencia antes de formar una opinión",
+      c2k:"CAPÍTULO 02 · 2017 · LOS AÑOS DE CONSTRUCTOR",
+      c2h:"Después pasé cuatro años al otro lado del bug report.",
+      c2b:"Como desarrollador full-stack en Brasil Center, llevé Java, Spring Boot, React y Vue a producción. Escribí las race conditions, los null pointers y los despliegues de \"funciona en mi máquina\". Así que hoy, cuando pruebo, no adivino dónde se rompe el software. Ya viví allí.",
+      c2lk:"HABILIDAD ADQUIRIDA:", c2lv:"Saber dónde esconden los cuerpos los desarrolladores",
+      c3k:"CAPÍTULO 03 · 2022 · EL REINICIO",
+      c3h:"País nuevo, idioma nuevo en el trabajo, de vuelta al aula.",
+      c3b:"Me mudé a Canadá y estudié IT Software Development en NBCC Moncton, graduándome en 2024. Empezar de nuevo a los treinta y tantos, en un segundo idioma, hace algo útil a un tester: elimina el miedo al sistema desconocido. Cada base de código es solo otro país. Aprendes sus reglas y luego pruebas si las cumple.",
+      c3lk:"HABILIDAD ADQUIRIDA:", c3lv:"Entrar en cualquier sistema como si fuera mi lugar",
+      c4k:"CAPÍTULO 04 · 2024 · ROMPERLO COMO SE DEBE",
+      c4h:"Una pasantía en BMM se convirtió en el oficio.",
+      c4b:"Entré en BMM Testlabs como pasante en abril de 2024 y en junio era QA Engineer. Allí aprendí pruebas reguladas: verificar paytables, RTP y pagos contra el modelo matemático, jurisdicción por jurisdicción. Automaticé con Playwright y Postman en CI y construí una base de conocimiento asistida por IA para acelerar el análisis de causa raíz y detectar defectos duplicados antes de que hicieran perder tiempo a alguien.",
+      c4lk:"RESULTADO:", c4lv:"Dos ascensos en dos años",
+      c5k:"CAPÍTULO 05 · 2026 · EL ESCRITORIO DE VERIFICACIÓN",
+      c5h:"Ahora lidero el equipo que verifica lo que los reguladores van a firmar.",
+      c5b:"Desde mayo de 2026 lidero a 11 testers como Líder de Equipo SQA. Verificamos unos 15 juegos de casino al mes contra las regulaciones de 10 jurisdicciones y, cuando encontramos un problema, lo devolvemos al estudio y trabajamos con él hasta que queda bien. Ese ciclo de colaboración, verificar, reportar, volver a verificar, es el trabajo. En 2026 también aprobé el ISTQB CTFL, tras dos semanas de estudio. Lo próximo: el CTAL Test Manager, próximamente.",
+      c5lk:"ÚLTIMOS 6 MESES:", c5lv:"95% de conformidad en la primera pasada · 98% de entregas a tiempo",
+      mKicker:"CÓMO TRABAJO",
+      mH2:"Un bug es una historia a la que le falta un capítulo. Mi trabajo es encontrar cuál.",
+      mLead:"Cuatro movimientos, en orden, en cada juego y cada sistema. El orden importa más que las herramientas.",
+      s1n:"PASO 01", s1t:"Lee las reglas primero.", s1b:"El modelo matemático y la regulación de la jurisdicción son la especificación. Si no está escrito allí, todavía no es un defecto, es una pregunta.",
+      s2n:"PASO 02", s2t:"Sigue el dinero.", s2b:"Paytables, RTP, pagos. En el juego regulado, el defecto que importa es el que paga mal. Prueba el camino feliz al final.",
+      s3n:"PASO 03", s3t:"Automatiza lo repetible.", s3b:"Las suites de Playwright y Postman en CI ejecutan las comprobaciones que aburren a los humanos, para que los humanos dediquen su atención al criterio.",
+      s4n:"PASO 04", s4t:"Reporta para que se arregle.", s4b:"Causa raíz, evidencia y comprobación de duplicados contra la base de conocimiento. Un informe que un desarrollador puede ejecutar en una lectura es un defecto medio arreglado.",
+      calloutK:"DISTINCIÓN IMPORTANTE.",
+      calloutB:"Mi equipo verifica. Compliance certifica. No aprobamos ni rechazamos juegos para el mercado, y no fingimos hacerlo. Los verificamos contra las reglas y entregamos a Compliance un resultado en el que puede confiar. Acertar con esa frontera es buena parte del liderazgo en un laboratorio regulado.",
+      evH2:"No confíes en mi palabra. Confía en los números.",
+      m1l:"TESTERS LIDERADOS EN BMM TESTLABS",
+      m2l:"JURISDICCIONES VERIFICADAS",
+      m3l:"JUEGOS DE CASINO VERIFICADOS AL MES",
+      m4l:"CONFORMIDAD EN LA PRIMERA PASADA, ÚLTIMOS 6 MESES",
+      m5l:"ENTREGAS A TIEMPO, ÚLTIMOS 6 MESES",
+      ev1l:"AUTOMATIZACIÓN", ev1h:"Suites que corren mientras duermo.",
+      ev1b:"Comprobaciones de Playwright y Postman integradas en CI durante mis años como QA Engineer, cubriendo la verificación repetitiva para que los ojos del equipo queden en los casos límite y el criterio.",
+      ev2l:"CONOCIMIENTO", ev2h:"Una memoria de defectos asistida por IA.",
+      ev2b:"Una base de conocimiento que acelera el análisis de causa raíz y señala defectos duplicados a tiempo, para que los estudios no reciban el mismo hallazgo dos veces y los testers no reinvestiguen problemas resueltos.",
+      ev3l:"CERTIFICACIÓN", ev3h:"ISTQB CTFL, certificado en 2026.",
+      ev3b:"Aprobado tras dos semanas de estudio con un método que creé para temarios densos. CTAL Test Manager: próximamente, examen previsto para 2027.",
+      tbKicker:"HERRAMIENTAS · LO QUE REALMENTE ESTÁ SOBRE LA MESA",
+      tb1:"Playwright", tb2:"Postman", tb3:"Java", tb4:"Spring Boot", tb5:"React", tb6:"Vue",
+      tb7:"Pipelines de CI", tb8:"Diseño de Pruebas (Copeland)", tb9:"Verificación de RTP / Paytable",
+      tb10:"Análisis de Causa Raíz", tb11:"QA Asistida por IA", tb12:"Liderazgo de Equipo",
+      shKicker:"PROYECTO DESTACADO · MIRA ESTO PRIMERO · ★ LA PIEZA QUE ME CONTRATA",
+      shH2:"No solo leas que pruebo. Mira la herramienta que construí hacerlo.",
+      shLead:"Este es Unflaky, la herramienta de QA que creé. En el video recorro qué hace, cómo piensa y por qué la construí. Si vas a ver una cosa en esta página, mira esta. Es la prueba más clara de cómo trabajo: no solo encuentro bugs, construyo el sistema que los encuentra.",
+      facadeTop:"unflaky · recorrido por la herramienta",
+      facadeBottom:"@UNFLAKY · YOUTUBE",
+      playerCaption:"unflaky · recorrido por la herramienta · @UNFLAKY · YOUTUBE",
+      playerDesc:"Unflaky en acción: un equipo de QA dentro de una herramienta. Míralo leer un producto, crear las pruebas, ejecutarlas y convertir el resultado en un informe sobre el que un cliente puede actuar.",
+      agentsLabel:"6 AGENTES:",
+      b1n:"01. PLANIFICA", b1h:"Lee el producto primero.",
+      b1b:"Analiza el repositorio y el producto y luego escribe el plan y los casos de prueba, con técnicas de diseño de pruebas probadas, no con conjeturas.",
+      b2n:"02. CREA Y EJECUTA", b2h:"Crea y ejecuta las pruebas.",
+      b2b:"Comprobaciones funcionales, de automatización, de API, de regresión y de móvil/UI, el trabajo de un equipo de QA completo, ejecutado por agentes especializados.",
+      b3n:"03. REPORTA", b3h:"Entrega un informe con el que puedes contratar.",
+      b3b:"La salida es un informe de pruebas claro y listo para el cliente. Abre issues con evidencia y nunca arregla código en silencio, las pruebas siguen siendo honestas e independientes.",
+      shQuote:"\"Este tipo no solo prueba software. Tuvo una idea de cómo deberían funcionar las pruebas y la construyó.\" Esa es la reacción que este video debe provocar, y es por eso que los fundadores me contratan para probar SaaS, sobre todo SaaS creado con IA, antes de que se rompa en producción.",
+      shCta:"Mira el video en YouTube (@unflaky)",
+      nxKicker:"EL PRÓXIMO CAPÍTULO · ESCRIBIÉNDOSE AHORA",
+      nxH2:"La ejecución no termina en mi escritorio. Lo siguiente: enseño a los QA a pensar, no solo a hacer clic.",
+      nxBody:"Un junior encontró una vez 30 bugs en un día. Yo encontré 1, y el mío era el único que importaba. Esa diferencia no es talento, es pensamiento, y el pensamiento se puede enseñar. Eso es lo que estoy construyendo ahora.",
+      x1w:"2027", x1h:"Unflaky, Quality Lab.",
+      x1b:"Una empresa de QA enfocada en probar SaaS, sobre todo SaaS creado con IA, antes de que se rompa en producción.",
+      x2w:"SEMANAL", x2h:"@unflaky en YouTube.",
+      x2b:"QA en la práctica, liderazgo y automatización, en portugués, para QA que quieren ser senior, líderes y freelance.",
+      x3w:"PRÓXIMAMENTE", x3h:"CTAL Test Manager.",
+      x3b:"El siguiente paso: la certificación que sigue al CTFL, examen previsto para 2027.",
+      stamp:"✓ PASS",
+      soH2:"Ejecución completa. Verifiquemos la tuya antes de que lo hagan tus usuarios.",
+      soBody:"Si entregas software que tiene que estar bien, un juego, un SaaS, un producto creado con IA a una mala release de perder a sus usuarios, esta es la conversación que tengo todos los días. Empieza aquí.",
+      lkIn:"/IN/HERBERT-CUNHA", lkGh:"@HERBERTPH", lkYt:"@UNFLAKY", lkX:"X @HERBERTBUILDS",
+      foot:"HERBERT PARASIO · LÍDER DE EQUIPO SQA · DIEPPE, CANADÁ · EN PT ES FR · LA EJECUCIÓN DE ARRIBA ES LA LÍNEA DE TIEMPO REAL, 2014–2026"
     },
     fr:{
-      title:"Herbert P. — Ingénieur QA",
-      desc:"Chef d'équipe QA certifiant des logiciels de casino et de machines à sous dans plusieurs juridictions. Conception de tests, protocole SAS, automatisation Playwright.",
-      locale:"fr-CA",
-      status:"Ouvert à la mobilité",
-      eyebrow:"Moncton, Canada · Jeux et logiciels réglementés",
-      h1:"Je teste les logiciels que le régulateur doit approuver.",
-      lede:"Chef d'équipe QA dans un laboratoire de certification de jeux, où un défaut qui passe signifie une soumission rejetée dans toute une juridiction. <strong>J'applique aujourd'hui la même rigueur à des suites automatisées avec Playwright.</strong>",
-      runWho:"Exécution des tests",
-      r1:"dirige une équipe QA logicielle chez BMM Test Labs",
-      r2:"certifie des jeux de casino et de machines à sous dans plusieurs juridictions",
-      r3:"lit et valide le trafic du protocole SAS",
-      r4:"développe les outils internes utilisés chaque jour par l'équipe QA",
-      r5:"écrit des suites Playwright sur des applications réelles",
-      r6:"travaille en anglais, portugais, espagnol et français",
-      r7:"certification ISTQB Foundation Level",
-      pending:"planifiée", flaky:"0 instable", summary:"{p} réussis · {s} planifiée",
-      pLabel:"Ma méthode", pTitle:"La conformité m'a appris à écrire des tests qui tiennent.",
-      p1h:"Conception de tests", p1b:"Les exigences arrivent sous forme de règles réglementaires, pas de user stories. Je les transforme en couverture auditable par un tiers : cas traçables, étapes reproductibles et preuve jointe à chaque résultat.",
-      p2h:"Automatisation", p2b:"Des suites Playwright conçues d'abord pour la stabilité : des locators robustes, des attentes explicites plutôt que des sleeps, et une règle stricte — un test instable se corrige ou se supprime, on ne le relance jamais jusqu'au vert.",
-      p3h:"Livraison", p3b:"Des pipelines qui compilent l'application, la servent dans un environnement éphémère, exécutent la suite sur ce build et ne déploient qu'ensuite. La production n'est jamais la cible des tests.",
-      p4h:"Équipe", p4b:"Diriger la QA, c'est un tri des anomalies auquel les développeurs se fient : une sévérité qui reflète l'impact réel, des rapports écrits pour rendre le correctif évident, et un processus qui survit aux semaines chargées.",
-      eLabel:"Preuves", eTitle:"Ce que j'ai construit, puis testé.",
-      v1:"En ligne", v2:"Suite au vert", v3:"En service", v4:"En cours",
-      c1b:"Une application web qui cartographie les positions de jiu-jitsu et les transitions entre elles, pour qu'un pratiquant puisse tracer un chemin au lieu de mémoriser des mouvements isolés.",
-      c2b:"La suite end-to-end de FLUXO, écrite comme une étude pratique : stratégie de locators, profondeur des assertions et ce qui provoque réellement l'instabilité dans une vraie interface.",
-      c3b:"Une application web interne pour mon équipe chez BMM Test Labs, construite parce que le suivi dont nous avions besoin n'existait pas dans nos outils.",
-      c4b:"Un jeu de gestion de basket dans le navigateur avec une vraie stack de production : logique de simulation, état persistant et assez de pièces mobiles pour mériter de vrais tests.",
-      seeProject:"Voir le projet →", readTests:"Lire les tests →",
-      dStack:"Stack", dRole:"Rôle", dCovers:"Couvre", dUsers:"Utilisateurs",
-      c1role:"Conception, développement, déploiement", c2covers:"Parcours UI, navigation, état",
-      c3stack:"Application web · interne", c3users:"Équipe SQA, au quotidien",
-      c4stack:"Web · simulation", c4role:"Projet solo",
-      tLabel:"Outils", tTitle:"Ce que j'utilise.",
-      tTesting:"Tests", tEng:"Ingénierie", tLang:"Langues",
-      tk1:"Tests manuels et exploratoires", tk2:"Conception de cas de test", tk3:"Validation du protocole SAS", tk4:"Suites de régression et de conformité", tk5:"JIRA · outils internes",
-      lg1:"Portugais <span>natif</span>", lg2:"Anglais <span>courant</span>", lg3:"Espagnol <span>notions</span>", lg4:"Français <span>notions</span>",
-      sLabel:"Signature", sTitle:"Vous recrutez en QA ou en automatisation ?",
-      sBody:"Je cherche des postes de QA Automation et SDET — ouvert à la mobilité et habitué à travailler entre plusieurs fuseaux et langues. Je serai ravi d'expliquer comment j'aborderais les tests de votre produit.",
-      kEmail:"E-mail", kResume:"CV", kResumeLink:"Télécharger le PDF",
-      stampBig:"VALIDÉ", stampName:"NOM — HERBERT P.", stampRole:"POSTE — QA / AUTOMATISATION DES TESTS",
-      stampBase:"BASE — MONCTON, CANADA", stampStatus:"STATUT — OUVERT À LA MOBILITÉ", stampVerified:"VÉRIFIÉ —",
-      footNote:"Cette page est construite, testée avec Playwright et déployée par un pipeline.", footLink:"Voir le workflow →"
+      title:"Herbert Parasio · Chef d'équipe SQA",
+      desc:"Chef d'équipe SQA chez BMM Testlabs. Mon équipe vérifie des jeux de casino et de machines à sous au regard du modèle mathématique et des règles de 10 juridictions. Parcours, preuves et la vidéo Unflaky.",
+      langLabel:"Langue",
+      progressLabel:"Progression de l'exécution des tests",
+      hudName:"HERBERT PARASIO · CHEF D'ÉQUIPE SQA",
+      navStory:"Parcours", navMethod:"Méthode", navEvidence:"Preuves",
+      navVideo:"Vidéo", navNext:"Suite", navSignoff:"Clôture",
+      heroLabel:"HERBERT PARASIO · CHEF D'ÉQUIPE SQA",
+      heroSub:"herbert.spec.ts · EXÉCUTION DES TESTS EN COURS",
+      h1:"Chaque release raconte une histoire. Je m'assure qu'elle se termine par une réussite, pas par un post-mortem.",
+      lede:"Je suis Herbert Parasio, chef d'équipe SQA chez BMM Testlabs à Dieppe, au Canada. Mon équipe vérifie des jeux de casino et de machines à sous au regard du modèle mathématique et des règles de 10 juridictions, avant que Compliance décide s'ils peuvent être commercialisés. Cette page est l'exécution. Faites défiler, et chaque chapitre passe.",
+      cue:"DÉFILEZ POUR EXÉCUTER LA SUITE · 7 TESTS",
+      specRun:"EXÉCUTION DES TESTS",
+      t1:"Lit les données avant de juger · 2014 · Infoglobo / Grupo Globo",
+      t2:"Construit le logiciel avant de le tester · 2017 · Développeur full-stack",
+      t3:"Traverse un océan et repart de zéro · 2022 · NBCC Moncton, Canada",
+      t4:"Apprend à le casser correctement · 2024 · BMM, stagiaire puis QA Engineer",
+      t5:"Vérifie ce que les régulateurs signent · 2026 · Chef d'équipe SQA, 11 testeurs",
+      t6:"Certifié, pas seulement expérimenté · ISTQB CTFL, 2026",
+      t7:"Apprend aux prochains QA à penser · Prochain chapitre, Unflaky",
+      statusRunning:"EN COURS",
+      statusPassing:"TOUT PASSE",
+      storyKicker:"L'HISTOIRE · CINQ CHAPITRES, UN FIL",
+      storyH2:"La plupart des testeurs apprennent à tester. J'ai d'abord appris tout ce qui entoure le test.",
+      storyBody:"Les données m'ont appris les motifs. Le code m'a appris où les choses se cachent. Un nouveau pays m'a appris à repartir de zéro. Ensemble, c'est pourquoi je trouve le bug qui compte, pas les trente qui ne comptent pas.",
+      c1k:"CHAPITRE 01 · 2014 · L'ŒIL DU MOTIF",
+      c1h:"Avant de tester des logiciels, je lisais des chiffres pour vivre.",
+      c1b:"J'ai commencé comme analyste de données junior chez Infoglobo, Grupo Globo, puis je suis passé au groupe Lojas Americanas. Deux ans de tableaux de bord et d'anomalies enseignent ce qu'aucune formation au test n'enseigne : les systèmes avouent d'abord dans leurs données. La défaillance est généralement visible dans les chiffres bien avant que quelqu'un ouvre un bug.",
+      c1lk:"COMPÉTENCE ACQUISE :", c1lv:"Lire la preuve avant de se faire une opinion",
+      c2k:"CHAPITRE 02 · 2017 · LES ANNÉES DE BÂTISSEUR",
+      c2h:"J'ai ensuite passé quatre ans de l'autre côté du rapport de bug.",
+      c2b:"Comme développeur full-stack chez Brasil Center, j'ai livré Java, Spring Boot, React et Vue en production. J'ai écrit les conditions de course, les null pointers et les déploiements « ça marche sur ma machine ». Alors aujourd'hui, quand je teste, je ne devine pas où le logiciel casse. J'y ai vécu.",
+      c2lk:"COMPÉTENCE ACQUISE :", c2lv:"Savoir où les développeurs cachent les corps",
+      c3k:"CHAPITRE 03 · 2022 · LE REDÉMARRAGE",
+      c3h:"Nouveau pays, nouvelle langue au travail, retour en classe.",
+      c3b:"J'ai déménagé au Canada et étudié IT Software Development au NBCC Moncton, diplômé en 2024. Repartir de zéro à trente ans passés, dans une seconde langue, fait une chose utile à un testeur : cela tue la peur du système inconnu. Chaque base de code n'est qu'un autre pays. On apprend ses règles, puis on teste s'il les respecte.",
+      c3lk:"COMPÉTENCE ACQUISE :", c3lv:"Entrer dans n'importe quel système comme si j'y avais ma place",
+      c4k:"CHAPITRE 04 · 2024 · LE CASSER CORRECTEMENT",
+      c4h:"Un stage chez BMM est devenu le métier.",
+      c4b:"J'ai rejoint BMM Testlabs comme stagiaire en avril 2024 et j'étais QA Engineer en juin. J'y ai appris le test réglementé : vérifier les paytables, le RTP et les paiements au regard du modèle mathématique, juridiction par juridiction. J'ai automatisé avec Playwright et Postman en CI et construit une base de connaissances assistée par IA pour accélérer l'analyse de cause racine et repérer les défauts en double avant qu'ils ne fassent perdre du temps.",
+      c4lk:"RÉSULTAT :", c4lv:"Deux promotions en deux ans",
+      c5k:"CHAPITRE 05 · 2026 · LE BUREAU DE VÉRIFICATION",
+      c5h:"Je dirige maintenant l'équipe qui vérifie ce que les régulateurs vont signer.",
+      c5b:"Depuis mai 2026, je dirige 11 testeurs comme chef d'équipe SQA. Nous vérifions environ 15 jeux de casino par mois au regard des réglementations de 10 juridictions et, quand nous trouvons un problème, nous le renvoyons au studio et travaillons avec lui jusqu'à ce que ce soit correct. Cette boucle de partenariat, vérifier, rapporter, revérifier, est le métier. En 2026, j'ai aussi passé l'ISTQB CTFL, après deux semaines d'étude. Prochaine étape : le CTAL Test Manager, bientôt.",
+      c5lk:"6 DERNIERS MOIS :", c5lv:"95 % de conformité au premier passage · 98 % de livraisons dans les délais",
+      mKicker:"MA MÉTHODE",
+      mH2:"Un bug est une histoire à laquelle il manque un chapitre. Mon travail est de trouver lequel.",
+      mLead:"Quatre mouvements, dans l'ordre, sur chaque jeu et chaque système. L'ordre compte plus que les outils.",
+      s1n:"ÉTAPE 01", s1t:"Lire les règles d'abord.", s1b:"Le modèle mathématique et la réglementation de la juridiction sont la spécification. Si ce n'est pas écrit là, ce n'est pas encore un défaut, c'est une question.",
+      s2n:"ÉTAPE 02", s2t:"Suivre l'argent.", s2b:"Paytables, RTP, paiements. Dans le jeu réglementé, le défaut qui compte est celui qui paie mal. Testez le chemin heureux en dernier.",
+      s3n:"ÉTAPE 03", s3t:"Automatiser le répétable.", s3b:"Les suites Playwright et Postman en CI exécutent les contrôles qui ennuient les humains, pour que les humains consacrent leur attention au jugement.",
+      s4n:"ÉTAPE 04", s4t:"Rapporter pour que ce soit corrigé.", s4b:"Cause racine, preuve, contrôle des doublons dans la base de connaissances. Un rapport qu'un développeur peut traiter en une lecture est un défaut à moitié corrigé.",
+      calloutK:"DISTINCTION IMPORTANTE.",
+      calloutB:"Mon équipe vérifie. Compliance certifie. Nous n'approuvons ni ne rejetons de jeux pour le marché, et nous ne prétendons pas le faire. Nous les vérifions au regard des règles et remettons à Compliance un résultat auquel il peut se fier. Bien tenir cette frontière, c'est l'essentiel du leadership dans un laboratoire réglementé.",
+      evH2:"Ne me croyez pas sur parole. Croyez les chiffres.",
+      m1l:"TESTEURS DIRIGÉS CHEZ BMM TESTLABS",
+      m2l:"JURIDICTIONS VÉRIFIÉES",
+      m3l:"JEUX DE CASINO VÉRIFIÉS PAR MOIS",
+      m4l:"CONFORMITÉ AU PREMIER PASSAGE, 6 DERNIERS MOIS",
+      m5l:"LIVRAISONS DANS LES DÉLAIS, 6 DERNIERS MOIS",
+      ev1l:"AUTOMATISATION", ev1h:"Des suites qui tournent pendant que je dors.",
+      ev1b:"Des contrôles Playwright et Postman intégrés à la CI pendant mes années de QA Engineer, couvrant la vérification répétitive pour que les yeux de l'équipe restent sur les cas limites et le jugement.",
+      ev2l:"CONNAISSANCE", ev2h:"Une mémoire des défauts assistée par IA.",
+      ev2b:"Une base de connaissances qui accélère l'analyse de cause racine et signale tôt les défauts en double, pour que les studios ne reçoivent pas deux fois la même trouvaille et que les testeurs ne réétudient pas des problèmes résolus.",
+      ev3l:"CERTIFICATION", ev3h:"ISTQB CTFL, certifié en 2026.",
+      ev3b:"Réussi après deux semaines d'étude grâce à une méthode que j'ai créée pour les programmes denses. CTAL Test Manager : bientôt, examen prévu pour 2027.",
+      tbKicker:"OUTILS · CE QUI EST VRAIMENT SUR LE BUREAU",
+      tb1:"Playwright", tb2:"Postman", tb3:"Java", tb4:"Spring Boot", tb5:"React", tb6:"Vue",
+      tb7:"Pipelines CI", tb8:"Conception de tests (Copeland)", tb9:"Vérification RTP / Paytable",
+      tb10:"Analyse de cause racine", tb11:"QA assistée par IA", tb12:"Leadership d'équipe",
+      shKicker:"PROJET PHARE · À REGARDER D'ABORD · ★ LA PIÈCE QUI ME FAIT EMBAUCHER",
+      shH2:"Ne lisez pas seulement que je teste. Regardez l'outil que j'ai construit le faire.",
+      shLead:"Voici Unflaky, l'outil de QA que j'ai créé. Dans la vidéo, je montre ce qu'il fait, comment il pense et pourquoi je l'ai construit. Si vous ne regardez qu'une chose sur cette page, regardez celle-ci. C'est la preuve la plus claire de ma façon de travailler : je ne trouve pas seulement des bugs, je construis le système qui les trouve.",
+      facadeTop:"unflaky · visite de l'outil",
+      facadeBottom:"@UNFLAKY · YOUTUBE",
+      playerCaption:"unflaky · visite de l'outil · @UNFLAKY · YOUTUBE",
+      playerDesc:"Unflaky en action : une équipe QA dans un outil. Voyez-le lire un produit, créer les tests, les exécuter et transformer le résultat en un rapport sur lequel un client peut agir.",
+      agentsLabel:"6 AGENTS :",
+      b1n:"01. PLANIFIE", b1h:"Lit le produit d'abord.",
+      b1b:"Il analyse le dépôt et le produit, puis écrit le plan de test et les cas de test, avec des techniques de conception éprouvées, pas des suppositions.",
+      b2n:"02. CRÉE ET EXÉCUTE", b2h:"Crée et exécute les tests.",
+      b2b:"Contrôles fonctionnels, d'automatisation, d'API, de régression et mobile/UI, le travail d'une équipe QA complète, exécuté par des agents spécialisés.",
+      b3n:"03. RAPPORTE", b3h:"Livre un rapport sur lequel on peut embaucher.",
+      b3b:"Le résultat est un rapport de test clair, prêt pour le client. Il ouvre des issues avec preuve et ne corrige jamais le code en silence, le test reste honnête et indépendant.",
+      shQuote:"« Ce type ne teste pas seulement des logiciels. Il a eu une idée de la façon dont les tests devraient fonctionner, et il l'a construite. » C'est la réaction que cette vidéo doit provoquer, et c'est pourquoi des fondateurs m'embauchent pour tester du SaaS, en particulier du SaaS créé avec l'IA, avant qu'il ne casse en production.",
+      shCta:"Regardez la vidéo sur YouTube (@unflaky)",
+      nxKicker:"LE PROCHAIN CHAPITRE · EN COURS D'ÉCRITURE",
+      nxH2:"L'exécution ne s'arrête pas à mon bureau. Ensuite, j'apprends aux QA à penser, pas seulement à cliquer.",
+      nxBody:"Un junior a un jour trouvé 30 bugs en une journée. J'en ai trouvé 1, et le mien était le seul qui comptait. Cet écart n'est pas du talent, c'est de la pensée, et la pensée s'enseigne. C'est ce que je construis ensuite.",
+      x1w:"2027", x1h:"Unflaky, Quality Lab.",
+      x1b:"Une entreprise de QA centrée sur le test de SaaS, en particulier de SaaS créé avec l'IA, avant qu'il ne casse en production.",
+      x2w:"CHAQUE SEMAINE", x2h:"@unflaky sur YouTube.",
+      x2b:"La QA en pratique, le leadership et l'automatisation, en portugais, pour les QA qui veulent devenir seniors, leaders et freelances.",
+      x3w:"BIENTÔT", x3h:"CTAL Test Manager.",
+      x3b:"La prochaine étape : la certification qui suit le CTFL, examen prévu pour 2027.",
+      stamp:"✓ PASS",
+      soH2:"Exécution terminée. Vérifions la vôtre avant vos utilisateurs.",
+      soBody:"Si vous livrez un logiciel qui doit être juste, un jeu, un SaaS, un produit créé avec l'IA à une mauvaise release de perdre ses utilisateurs, c'est la conversation que j'ai chaque jour. Commencez ici.",
+      lkIn:"/IN/HERBERT-CUNHA", lkGh:"@HERBERTPH", lkYt:"@UNFLAKY", lkX:"X @HERBERTBUILDS",
+      foot:"HERBERT PARASIO · CHEF D'ÉQUIPE SQA · DIEPPE, CANADA · EN PT ES FR · L'EXÉCUTION CI-DESSUS EST LA VRAIE CHRONOLOGIE, 2014–2026"
     }
   };
 
-  var SUPPORTED = ["en","pt","es","fr"];
-  var rows = Array.prototype.slice.call(document.querySelectorAll("#rows .row"));
-  var passed = rows.filter(function(r){ return !r.dataset.pending; }).length;
-  var scheduled = rows.length - passed;
-  var current = "en";
-  var ran = false;
+  var SUPPORTED = ["en", "pt", "es", "fr"];
+  var TOTAL = 7;
 
-  function apply(lang){
-    var d = T[lang] || T.en;
-    current = lang;
-    document.documentElement.lang = lang;
+  var spec = document.getElementById("spec");
+  var specList = document.getElementById("specList");
+  var specStatus = document.getElementById("specStatus");
+  var specCheck = document.getElementById("specCheck");
+  var progressBar = document.getElementById("progress");
+  var progressFill = document.getElementById("progressFill");
+  var runCount = document.getElementById("runCount");
+  var langsNav = document.getElementById("langs");
+  var story = document.getElementById("story");
+  var spineFill = document.getElementById("spineProgress");
+  var chapters = Array.prototype.slice.call(document.querySelectorAll("[data-chapter]"));
+  var evidence = document.getElementById("evidence");
+  var nextSec = document.getElementById("next");
+  var passCard = document.getElementById("passCard");
+
+  var passed = [false, false, false, false, false, false, false];
+  var passedCount = 0;
+  var current = "en";
+  var started = false;
+
+  function renderRun(){
+    progressBar.setAttribute("aria-valuenow", String(passedCount));
+    progressFill.style.width = (passedCount / TOTAL * 100) + "%";
+    runCount.textContent = passedCount ? passedCount + " / 7 PASSED" : "RUN 0/7";
+    runCount.classList.toggle("done", passedCount === TOTAL);
+    spec.classList.toggle("done", passedCount === TOTAL);
+    specStatus.textContent = passedCount === TOTAL ? T[current].statusPassing : T[current].statusRunning;
+    specCheck.textContent = passedCount === TOTAL ? "✓" : "";
+  }
+
+  function mark(n){
+    if (passed[n - 1]) return;
+    passed[n - 1] = true;
+    passedCount++;
+    var item = specList.querySelector('[data-test="' + n + '"]');
+    if (item){
+      item.classList.remove("pending");
+      item.classList.add("passed");
+      item.dataset.state = "passed";
+    }
+    renderRun();
+  }
+
+  function setMeta(selector, value){
+    var el = document.querySelector(selector);
+    if (el) el.setAttribute("content", value);
+  }
+
+  function apply(code){
+    var d = T[code] || T.en;
+    current = T[code] ? code : "en";
+    document.documentElement.lang = current;
     document.title = d.title;
-    var meta = document.querySelector('meta[name="description"]');
-    if (meta) meta.setAttribute("content", d.desc);
+    setMeta('meta[name="description"]', d.desc);
+    setMeta('meta[property="og:title"]', d.title);
+    setMeta('meta[property="og:description"]', d.desc);
+    langsNav.setAttribute("aria-label", d.langLabel);
+    progressBar.setAttribute("aria-label", d.progressLabel);
 
     document.querySelectorAll("[data-i]").forEach(function(el){
       var v = d[el.dataset.i];
-      if (typeof v !== "string") return;
-      if (v.indexOf("<") > -1) el.innerHTML = v; else el.textContent = v;
+      if (typeof v === "string") el.textContent = v;
     });
     document.querySelectorAll("[data-ihtml]").forEach(function(el){
       var v = d[el.dataset.ihtml];
       if (typeof v === "string") el.innerHTML = v;
     });
 
-    document.getElementById("summary").innerHTML =
-      d.summary.replace("{p}", "<b>" + passed + "</b>").replace("{s}", scheduled);
-
-    document.getElementById("today").textContent = new Date()
-      .toLocaleDateString(d.locale, { year:"numeric", month:"short", day:"2-digit" })
-      .toUpperCase();
+    renderRun();
 
     document.querySelectorAll("#langs button").forEach(function(b){
-      b.setAttribute("aria-current", String(b.dataset.lang === lang));
+      b.setAttribute("aria-current", String(b.dataset.lang === current));
     });
 
     var url = new URL(window.location.href);
-    if (lang === "en") url.searchParams.delete("lang"); else url.searchParams.set("lang", lang);
+    if (current === "en") url.searchParams.delete("lang");
+    else url.searchParams.set("lang", current);
     history.replaceState(null, "", url.pathname + url.search);
   }
 
-  function runSuite(){
-    if (ran) return;
-    ran = true;
-    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce){
-      rows.forEach(function(r){
-        r.classList.add("on");
-        if (!r.dataset.pending) r.querySelector(".ms").textContent = r.dataset.ms + "ms";
-      });
-      return;
-    }
-    var i = 0;
-    (function step(){
-      if (i >= rows.length) return;
-      var r = rows[i];
-      r.classList.add("on");
-      if (!r.dataset.pending) r.querySelector(".ms").textContent = r.dataset.ms + "ms";
-      i++;
-      setTimeout(step, 150 + Math.random() * 140);
-    })();
+  function updateSpine(){
+    var r = story.getBoundingClientRect();
+    if (!r.height) return;
+    var progress = (window.innerHeight * 0.55 - r.top) / r.height;
+    progress = Math.min(Math.max(progress, 0), 1);
+    spineFill.style.height = (progress * 100) + "%";
   }
 
-  document.getElementById("langs").addEventListener("click", function(e){
-    var b = e.target.closest("button[data-lang]");
-    if (b) apply(b.dataset.lang);
+  // Geometry catch-up: a jump straight to the bottom must still mark every test.
+  function syncFromViewport(){
+    var vh = window.innerHeight;
+    chapters.forEach(function(ch, i){
+      var r = ch.getBoundingClientRect();
+      if (r.top < vh * 0.72){
+        ch.classList.add("in");
+        mark(i + 1);
+      }
+    });
+    if (evidence.getBoundingClientRect().top < vh * 0.7) mark(6);
+    if (nextSec.getBoundingClientRect().top < vh * 0.7) mark(7);
+    if (passCard.getBoundingClientRect().top < vh * 0.7) passCard.classList.add("visible");
+  }
+
+  var ticking = false;
+  function onScroll(){
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function(){
+      ticking = false;
+      started = true;
+      syncFromViewport();
+      updateSpine();
+    });
+  }
+
+  if ("IntersectionObserver" in window){
+    var chapterObserver = new IntersectionObserver(function(entries){
+      if (!started) return;
+      entries.forEach(function(entry){
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("in");
+        mark(Number(entry.target.dataset.chapter) + 1);
+      });
+      updateSpine();
+    }, { threshold: 0.28 });
+    chapters.forEach(function(ch){ chapterObserver.observe(ch); });
+
+    var sectionObserver = new IntersectionObserver(function(entries){
+      if (!started) return;
+      entries.forEach(function(entry){
+        if (!entry.isIntersecting) return;
+        if (entry.target === evidence) mark(6);
+        if (entry.target === nextSec) mark(7);
+        if (entry.target === passCard) passCard.classList.add("visible");
+      });
+    }, { threshold: 0.3 });
+    [evidence, nextSec, passCard].forEach(function(el){ sectionObserver.observe(el); });
+  }
+
+  document.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll);
+
+  langsNav.addEventListener("click", function(e){
+    var button = e.target.closest("button[data-lang]");
+    if (button) apply(button.dataset.lang);
   });
+
+  var facade = document.getElementById("videoFacade");
+  var player = document.getElementById("videoPlayer");
+  var overrideId = window.UNFLAKY_VIDEO_ID;
+  var videoId = (typeof overrideId === "string" && overrideId) ? overrideId : UNFLAKY_VIDEO_ID;
+
+  if (videoId){
+    facade.addEventListener("click", function(e){
+      e.preventDefault();
+      var frame = document.createElement("div");
+      frame.className = "video-embed";
+      var iframe = document.createElement("iframe");
+      iframe.src = "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(videoId) + "?autoplay=1";
+      iframe.title = "Unflaky tool walkthrough";
+      iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+      iframe.allowFullscreen = true;
+      frame.appendChild(iframe);
+      player.replaceChild(frame, facade);
+    });
+  }
 
   var requested = new URLSearchParams(window.location.search).get("lang");
   apply(SUPPORTED.indexOf(requested) > -1 ? requested : "en");
-  setTimeout(runSuite, 350);
+  // A fresh load at the top opens at 0/7. Only a real scroll (or a restored
+  // mid-page position) starts the run and catches up with what is on screen.
+  if (window.scrollY > 0){
+    started = true;
+    syncFromViewport();
+  }
+  updateSpine();
 })();
 </script>
 </body>
