@@ -186,40 +186,53 @@ test.describe('showcase', () => {
     const showcase = page.locator('#showcase');
     await expect(showcase).toBeVisible();
     const facade = showcase.getByRole('link', { name: 'Watch the Unflaky tool walkthrough on YouTube' });
-    await expect(facade).toHaveAttribute('href', 'https://youtube.com/@unflaky');
+    await expect(facade).toHaveAttribute('href', 'https://www.youtube.com/watch?v=XVhTas9QSIo');
     await expect(page.locator('#showcase iframe')).toHaveCount(0);
     await expect(page.locator('#showcase img')).toHaveCount(0);
     expect(hosts.filter((host) => /youtube|ytimg|googlevideo/.test(host))).toEqual([]);
   });
 
-  test('TC-11 (AC-11): an empty video ID opens the channel in a new tab', async ({ page, context }) => {
-    await context.route('https://youtube.com/**', (route) => route.fulfill({ status: 200, body: 'ok' }));
+  test('TC-11 (FR-6): an empty video ID falls back to a plain link to the video', async ({ page, context }) => {
+    await context.route('https://www.youtube.com/**', (route) => route.fulfill({ status: 200, body: 'ok' }));
+    await page.addInitScript(() => {
+      (window as unknown as { UNFLAKY_VIDEO_ID: string }).UNFLAKY_VIDEO_ID = '';
+    });
     await openHome(page);
     const facade = page.locator('#videoFacade');
+    await expect(facade).toHaveAttribute('href', 'https://www.youtube.com/watch?v=XVhTas9QSIo');
     await expect(facade).toHaveAttribute('target', '_blank');
     await expect(facade).toHaveAttribute('rel', /noopener/);
     const [popup] = await Promise.all([page.waitForEvent('popup'), facade.click()]);
     await popup.waitForLoadState('domcontentloaded');
-    expect(popup.url()).toContain('youtube.com/@unflaky');
+    expect(popup.url()).toContain('XVhTas9QSIo');
     await expect(facade).toBeVisible();
   });
 
-  test('TC-12 (AC-12): a configured video ID replaces the facade with the privacy embed', async ({ page, context }) => {
+  test('TC-12 (FR-2): clicking the facade replaces it with the privacy embed', async ({ page, context }) => {
     await context.route('https://www.youtube-nocookie.com/**', (route) =>
       route.fulfill({ status: 200, body: 'ok' })
     );
-    await page.addInitScript(() => {
-      (window as unknown as { UNFLAKY_VIDEO_ID: string }).UNFLAKY_VIDEO_ID = 'abc123';
-    });
     await openHome(page);
+    let popupOpened = false;
+    page.on('popup', () => {
+      popupOpened = true;
+    });
     await page.locator('#videoFacade').click();
     const frame = page.locator('#showcase iframe');
     await expect(frame).toHaveCount(1);
     await expect(frame).toHaveAttribute(
       'src',
-      'https://www.youtube-nocookie.com/embed/abc123?autoplay=1'
+      'https://www.youtube-nocookie.com/embed/XVhTas9QSIo?autoplay=1'
     );
+    await expect(frame).toHaveAttribute('title', 'Watch the Unflaky tool walkthrough on YouTube');
+    await expect(frame).toHaveAttribute('allow', /autoplay/);
+    await expect(frame).toHaveAttribute('allow', /encrypted-media/);
+    await expect(frame).toHaveAttribute('allow', /picture-in-picture/);
+    await expect(frame).toHaveAttribute('allow', /fullscreen/);
+    await expect(frame).toHaveAttribute('allowfullscreen', '');
     await expect(page.locator('#videoFacade')).toHaveCount(0);
+    expect(popupOpened, 'the embed must not open a new tab').toBe(false);
+    await expect(frame).toBeFocused();
   });
 
   test('TC-13 (AC-13): the player stacks below 920px and stays side-by-side above it', async ({ page }) => {
@@ -255,7 +268,7 @@ test.describe('showcase without JavaScript', () => {
     await openHome(page);
     const facade = page.locator('#videoFacade');
     await expect(facade).toBeVisible();
-    await expect(facade).toHaveAttribute('href', 'https://youtube.com/@unflaky');
+    await expect(facade).toHaveAttribute('href', 'https://www.youtube.com/watch?v=XVhTas9QSIo');
     await expect(facade).toHaveAttribute('target', '_blank');
     await expect(facade).toHaveAttribute('rel', /noopener/);
     await expect(facade).toHaveAttribute('aria-label', 'Watch the Unflaky tool walkthrough on YouTube');
@@ -990,8 +1003,10 @@ test.describe('layout, theme and accessibility', () => {
     await expect(page.locator('#specStatus')).toContainText('ALL PASSING');
   });
 
-  test('TC-39 (AC-11/AC-28): the facade opens the channel from the keyboard', async ({ page, context }, testInfo) => {
-    await context.route('https://youtube.com/**', (route) => route.fulfill({ status: 200, body: 'ok' }));
+  test('TC-39 (FR-2/FR-7): the keyboard activates the embed and focus moves to the frame', async ({ page, context }, testInfo) => {
+    await context.route('https://www.youtube-nocookie.com/**', (route) =>
+      route.fulfill({ status: 200, body: 'ok' })
+    );
     await openHome(page);
     if (testInfo.project.name === 'mobile') {
       // WebKit/Safari keeps links out of the default Tab order unless the OS enables
@@ -1024,9 +1039,15 @@ test.describe('layout, theme and accessibility', () => {
     expect(focused?.id).toBe('videoFacade');
     expect(focused!.outlineWidth).toBeGreaterThan(0);
     expect(focused!.focusVisible).toBe(true);
-    const [popup] = await Promise.all([page.waitForEvent('popup'), page.keyboard.press('Enter')]);
-    await popup.waitForLoadState('domcontentloaded');
-    expect(popup.url()).toContain('youtube.com/@unflaky');
+
+    await page.keyboard.press('Enter');
+    const frame = page.locator('#showcase iframe');
+    await expect(frame).toHaveAttribute(
+      'src',
+      'https://www.youtube-nocookie.com/embed/XVhTas9QSIo?autoplay=1'
+    );
+    await expect(page.locator('#videoFacade')).toHaveCount(0);
+    await expect(frame).toBeFocused();
   });
 });
 

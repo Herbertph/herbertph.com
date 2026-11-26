@@ -152,7 +152,10 @@ test.describe('reduced motion', () => {
 });
 
 test.describe('showcase', () => {
-  test('AC-10: the player is typographic and loads no third party', async ({ page }) => {
+  const VIDEO_URL = 'https://www.youtube.com/watch?v=XVhTas9QSIo';
+  const EMBED_URL = 'https://www.youtube-nocookie.com/embed/XVhTas9QSIo?autoplay=1';
+
+  test('AC-10: the player is typographic, links the video and loads no third party', async ({ page }) => {
     const hosts: string[] = [];
     page.on('request', (request) => {
       try {
@@ -167,44 +170,105 @@ test.describe('showcase', () => {
     await expect(showcase).toBeVisible();
     await expect(showcase.getByRole('link', { name: 'Watch the Unflaky tool walkthrough on YouTube' })).toHaveAttribute(
       'href',
-      'https://youtube.com/@unflaky'
+      VIDEO_URL
     );
     await expect(page.locator('#showcase iframe')).toHaveCount(0);
     await expect(page.locator('#showcase img')).toHaveCount(0);
     expect(hosts.filter((host) => /youtube|ytimg|googlevideo/.test(host))).toEqual([]);
   });
 
-  test('AC-11: an empty ID opens the channel in a new tab and keeps the facade', async ({ page, context }) => {
-    await context.route('https://youtube.com/**', (route) => route.fulfill({ status: 200, body: 'ok' }));
+  test('AC-4: the facade and the CTA both point to the specific video', async ({ page }) => {
+    await page.goto('/');
+    for (const link of [
+      page.locator('#videoFacade'),
+      page.locator('#showcase .cta'),
+      page.getByRole('link', { name: 'Watch the Unflaky tool walkthrough on YouTube' }),
+    ]) {
+      await expect(link).toHaveAttribute('href', VIDEO_URL);
+      await expect(link).toHaveAttribute('target', '_blank');
+      await expect(link).toHaveAttribute('rel', /noopener/);
+    }
+  });
+
+  test('AC-5: the sign-off YouTube link stays on the channel', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('#signoff').getByRole('link', { name: '@UNFLAKY', exact: true })).toHaveAttribute(
+      'href',
+      'https://youtube.com/@unflaky'
+    );
+  });
+
+  test('FR-6: an empty video ID falls back to a plain link to the video', async ({ page, context }) => {
+    await context.route('https://www.youtube.com/**', (route) => route.fulfill({ status: 200, body: 'ok' }));
+    await page.addInitScript(() => {
+      (window as unknown as { UNFLAKY_VIDEO_ID: string }).UNFLAKY_VIDEO_ID = '';
+    });
     await page.goto('/');
 
     const facade = page.locator('#videoFacade');
+    await expect(facade).toHaveAttribute('href', VIDEO_URL);
     await expect(facade).toHaveAttribute('target', '_blank');
     await expect(facade).toHaveAttribute('rel', /noopener/);
 
     const [popup] = await Promise.all([page.waitForEvent('popup'), facade.click()]);
     await popup.waitForLoadState('domcontentloaded');
-    expect(popup.url()).toContain('youtube.com/@unflaky');
+    expect(popup.url()).toContain('XVhTas9QSIo');
     await expect(facade).toBeVisible();
   });
 
-  test('AC-12: a configured ID replaces the facade with the privacy embed', async ({ page, context }) => {
+  test('AC-2: clicking the facade embeds the video in place and focuses the frame', async ({ page, context }) => {
     await context.route('https://www.youtube-nocookie.com/**', (route) =>
       route.fulfill({ status: 200, body: 'ok' })
     );
-    await page.addInitScript(() => {
-      (window as unknown as { UNFLAKY_VIDEO_ID: string }).UNFLAKY_VIDEO_ID = 'abc123';
-    });
     await page.goto('/');
+
+    let popupOpened = false;
+    page.on('popup', () => {
+      popupOpened = true;
+    });
 
     await page.locator('#videoFacade').click();
     const frame = page.locator('#showcase iframe');
     await expect(frame).toHaveCount(1);
-    await expect(frame).toHaveAttribute(
-      'src',
-      'https://www.youtube-nocookie.com/embed/abc123?autoplay=1'
-    );
+    await expect(frame).toHaveAttribute('src', EMBED_URL);
+    await expect(frame).toHaveAttribute('title', 'Watch the Unflaky tool walkthrough on YouTube');
+    await expect(frame).toHaveAttribute('allow', /autoplay/);
+    await expect(frame).toHaveAttribute('allow', /encrypted-media/);
+    await expect(frame).toHaveAttribute('allow', /picture-in-picture/);
+    await expect(frame).toHaveAttribute('allow', /fullscreen/);
+    await expect(frame).toHaveAttribute('allowfullscreen', '');
     await expect(page.locator('#videoFacade')).toHaveCount(0);
+    expect(popupOpened, 'the embed must not open a new tab').toBe(false);
+    await expect(frame).toBeFocused();
+  });
+
+  test('AC-3: Enter on the focused facade embeds the video', async ({ page, context }) => {
+    await context.route('https://www.youtube-nocookie.com/**', (route) =>
+      route.fulfill({ status: 200, body: 'ok' })
+    );
+    await page.goto('/');
+    await page.locator('#videoFacade').focus();
+    await page.keyboard.press('Enter');
+    await expect(page.locator('#showcase iframe')).toHaveAttribute('src', EMBED_URL);
+    await expect(page.locator('#videoFacade')).toHaveCount(0);
+  });
+
+  test('AC-6: the embedded player fills the 16:9 frame without horizontal scroll', async ({ page, context }) => {
+    await context.route('https://www.youtube-nocookie.com/**', (route) =>
+      route.fulfill({ status: 200, body: 'ok' })
+    );
+    for (const width of [390, 1280]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/');
+      await page.locator('#videoFacade').click();
+      const box = await page.locator('.video-embed').boundingBox();
+      expect(box, `embed box at ${width}px`).toBeTruthy();
+      expect(Math.abs(box!.width / box!.height - 16 / 9)).toBeLessThan(0.02);
+      const overflow = await page.evaluate(
+        () => document.documentElement.scrollWidth > window.innerWidth + 1
+      );
+      expect(overflow, `no horizontal scroll at ${width}px`).toBe(false);
+    }
   });
 
   test('AC-13: below 920px the player stacks above the explanation', async ({ page }) => {

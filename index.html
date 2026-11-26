@@ -599,7 +599,7 @@
       <div class="show-grid">
         <div class="show-player">
           <div class="player" id="videoPlayer">
-            <a class="facade" id="videoFacade" href="https://youtube.com/@unflaky" target="_blank" rel="noopener" aria-label="Watch the Unflaky tool walkthrough on YouTube">
+            <a class="facade" id="videoFacade" href="https://www.youtube.com/watch?v=XVhTas9QSIo" target="_blank" rel="noopener" aria-label="Watch the Unflaky tool walkthrough on YouTube">
               <span class="facade-top" data-i="facadeTop"></span>
               <span class="facade-mid">
                 <span class="facade-play" aria-hidden="true">▶</span>
@@ -638,7 +638,7 @@
             </li>
           </ol>
           <blockquote data-i="shQuote"></blockquote>
-          <a class="cta" href="https://youtube.com/@unflaky" target="_blank" rel="noopener" data-i="shCta"></a>
+          <a class="cta" href="https://www.youtube.com/watch?v=XVhTas9QSIo" target="_blank" rel="noopener" data-i="shCta"></a>
         </div>
       </div>
     </div>
@@ -692,7 +692,7 @@
 </main>
 
 <script>
-const UNFLAKY_VIDEO_ID = "";
+const UNFLAKY_VIDEO_ID = "XVhTas9QSIo";
 
 (function(){
   var T = {
@@ -1259,20 +1259,35 @@ const UNFLAKY_VIDEO_ID = "";
   var facade = document.getElementById("videoFacade");
   var player = document.getElementById("videoPlayer");
   var overrideId = window.UNFLAKY_VIDEO_ID;
-  var videoId = (typeof overrideId === "string" && overrideId) ? overrideId : UNFLAKY_VIDEO_ID;
+  // A string override wins, so tests can force "" and exercise the plain-link fallback.
+  var videoId = typeof overrideId === "string" ? overrideId : UNFLAKY_VIDEO_ID;
+  var videoTitle = facade.getAttribute("aria-label") || "Unflaky tool walkthrough";
+
+  function embedVideo(){
+    if (!facade.isConnected) return;
+    var frame = document.createElement("div");
+    frame.className = "video-embed";
+    var iframe = document.createElement("iframe");
+    iframe.src = "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(videoId) + "?autoplay=1";
+    iframe.title = videoTitle;
+    iframe.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+    iframe.allowFullscreen = true;
+    iframe.setAttribute("tabindex", "0");
+    frame.appendChild(iframe);
+    player.replaceChild(frame, facade);
+    iframe.focus();
+  }
 
   if (videoId){
     facade.addEventListener("click", function(e){
       e.preventDefault();
-      var frame = document.createElement("div");
-      frame.className = "video-embed";
-      var iframe = document.createElement("iframe");
-      iframe.src = "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(videoId) + "?autoplay=1";
-      iframe.title = "Unflaky tool walkthrough";
-      iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-      iframe.allowFullscreen = true;
-      frame.appendChild(iframe);
-      player.replaceChild(frame, facade);
+      embedVideo();
+    });
+    facade.addEventListener("keydown", function(e){
+      if (e.key === " " || e.key === "Spacebar"){
+        e.preventDefault();
+        embedVideo();
+      }
     });
   }
 
