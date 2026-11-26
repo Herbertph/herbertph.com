@@ -487,7 +487,7 @@
   3. Read `#runCount` and the passed items.
 - **Expected result:** The page opens at `RUN 0/7` with all seven items pending, as required by AC-1 and by the PDF checklist ("A página abre como um test run: HUD fixa com contador 0/7").
 - **Automated by:** `tests/acceptance.homepage-test-run.spec.ts` › `TC-34 (AC-1): a tall viewport must still open at RUN 0/7`
-- **Status:** Fail (#1)
+- **Status:** Pass (#1 verified fixed in `9d8ea6b`)
 
 ### TC-35: the player is 16:9 and sticky above 920px without covering the HUD
 - **Acceptance criterion:** FR-15 / FR-17 (handoff risk)
