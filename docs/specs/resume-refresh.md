@@ -107,7 +107,7 @@ Built the agent framework Unflaky runs on: a team of AI agents (requirements ana
 - **AC-6** Given the PDF, Then the header links (herbertph.com, LinkedIn, GitHub, email) and unflakyqa.com are clickable and point to the URLs in FR-5.
 - **AC-7** Given the PDF on Letter size, Then no section heading sits alone at the bottom of a page, no line is cut at a page break, and layout/fonts match the current resume style.
 - **AC-8** Given `npm test`, Then the full suite passes on both projects. Existing resume tests (TC-32 and `AC-31` in `tests/portfolio.spec.ts`) keep passing without being weakened; QA may add the new checks.
-- **AC-9** Given the homepage, Then the "Resume" link still opens `/resume.pdf` (unchanged).
+- **AC-9** Given the site, Then the resume is still served at `/resume.pdf` (same URL). Note: the homepage currently has no link to the resume; adding one is out of scope until Herbert approves the copy.
 
 ## 6. Assumptions (Herbert to confirm in review)
 1. The CTFL line reads "ISTQB · certified 2026" (his file says "ISTQB 2026") so it matches the site wording.
