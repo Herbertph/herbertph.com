@@ -21,7 +21,7 @@ The `#showcase` section shipped with `const UNFLAKY_VIDEO_ID = "";`, so the typo
 - **FR-3** Before the click, no request goes to any YouTube/Google video domain, and no `<iframe>` or `<img>` exists in `#showcase` (unchanged from AC-10/AC-30).
 - **FR-4** Without JavaScript, the facade is a plain link to `https://www.youtube.com/watch?v=XVhTas9QSIo` (`target="_blank" rel="noopener"`), so it still promises and delivers the video.
 - **FR-5** The showcase CTA "Watch the video on YouTube (@unflaky)" links to `https://www.youtube.com/watch?v=XVhTas9QSIo` (`target="_blank" rel="noopener"`); the link points to what its text promises.
-- **FR-6** The empty-ID behaviour (facade opens the channel) stays in the code as a fallback, but is no longer the shipped state.
+- **FR-6** If `UNFLAKY_VIDEO_ID` is ever emptied again, the facade no longer embeds and simply follows its `href` (the video URL of FR-4) in a new tab. The channel is linked only from the Sign-off `@UNFLAKY` link.
 - **FR-7** After the embed, keyboard focus moves to the iframe (or stays inside the frame), and the HUD/run state is not affected.
 
 ## 4. Acceptance criteria
